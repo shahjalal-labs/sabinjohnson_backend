@@ -1,0 +1,90 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  fullName     String
+  email        String     @unique
+  phoneNumber  String     @unique
+  password     String?
+  city         String?
+  address      String?
+  profileImage String?
+  fcmToken     String?
+  role         UserRole   @default(User)
+  status       UserStatus @default(Active)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@map("users")
+}
+
+model Vehicle {
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String        @unique @db.ObjectId
+  vehicleName       String
+  model             String
+  licensePlate      String
+  vehicleImage      String?
+  idFrontImage      String?
+  idBackImage       String?
+  licenseFrontImage String?
+  licenseBackImage  String?
+  status            VehicleStatus @default(Pending)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@map("vehicles")
+}
+
+model Ridesharing {
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String            @db.ObjectId
+  riderId         String            @db.ObjectId
+  pickupLatitude  Float
+  pickupLongitude Float
+  destinationLat  Float
+  destinationLong Float
+  userDistanceKm  Float
+  riderDistanceKm Float
+  etaMinutes      Int
+  cost            Float
+  payWith         String
+  status          RidesharingStatus @default(Pending)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@map("ridesharing")
+}
+
+enum UserStatus {
+  Active
+  Blocked
+  Deleted
+}
+
+enum UserRole {
+  User
+  Rider
+  Food_Deliver
+  Admin
+}
+
+enum VehicleStatus {
+  Pending
+  Approved
+  Rejected
+}
+
+enum RidesharingStatus {
+  Pending
+  Accepted
+  Completed
+  Cancelled
+}
