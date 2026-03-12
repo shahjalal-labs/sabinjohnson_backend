@@ -10,8 +10,33 @@ router.post(
   auth(UserRole.User),
   ridesharingControllers.findRider,
 );
+router.post(
+  "/send-request",
+  auth(UserRole.User),
+  ridesharingControllers.sendRequestToRider,
+);
+router.get(
+  "/current-ride",
+  auth(UserRole.User),
+  ridesharingControllers.currentRide,
+);
+router.post(
+  "/cancel-ride/:rideId",
+  auth(UserRole.User, UserRole.Rider),
+  ridesharingControllers.cancelRide,
+);
+router.post(
+  "/start-ride/:rideId",
+  auth(UserRole.Rider),
+  ridesharingControllers.startRide,
+);
+router.post(
+  "/end-ride/:rideId",
+  auth(UserRole.Rider),
+  ridesharingControllers.endRide,
+);
 router.get("/", ridesharingControllers.getAllRidesharings);
-router.get("/:id", ridesharingControllers.getRidesharingById);
+router.get("/:rideId", auth(), ridesharingControllers.getRidesharingById);
 router.patch("/:id", ridesharingControllers.updateRidesharing);
 router.delete("/:id", ridesharingControllers.deleteRidesharing);
 

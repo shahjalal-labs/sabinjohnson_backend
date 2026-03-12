@@ -3,6 +3,11 @@ import { Request } from "express";
 import { verifyWebSocketToken } from "./verifyToken";
 import { parse } from "url";
 import prisma from "../../shared/prisma";
+import {
+  approveRequest,
+  getRidesharingById,
+  sendRequestToRider,
+} from "../modules/ridesharing/ridesharing.service";
 
 interface CustomWebSocket extends WebSocket {
   userId?: string;
@@ -35,7 +40,7 @@ export function setupWebSocketServer(server: any) {
 
     ws.on("message", async (message: any) => {
       try {
-        const { type, receiverId, coHostLink, streamId, content, publicKey } =
+        const { type, receiverId, coHostLink, streamId, content, requestData } =
           JSON.parse(message.toString());
 
         switch (type) {
@@ -71,7 +76,6 @@ export function setupWebSocketServer(server: any) {
                 id: true,
                 fullName: true,
                 profileImage: true,
-                profession: true,
               },
             });
             if (!senderInfo)
@@ -95,8 +99,7 @@ export function setupWebSocketServer(server: any) {
             break;
           }
 
-          //send as streaming chunks
-          case "send-message":
+          case "send-ride-request":
             try {
               if (!ws.userId) {
                 return ws.send(
@@ -106,14 +109,105 @@ export function setupWebSocketServer(server: any) {
                   }),
                 );
               }
-              if (!content) {
+              if (!requestData) {
                 return ws.send(
                   JSON.stringify({
                     type: "error",
-                    message: "Message content is required",
+                    message: "Request data is required",
                   }),
                 );
               }
+
+              const receiverSocket = connectedUsers.get(requestData.riderId);
+
+              if (
+                !receiverSocket ||
+                receiverSocket.readyState !== WebSocket.OPEN
+              ) {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Receiver is not online",
+                  }),
+                );
+              }
+
+              const ridesharing = await sendRequestToRider(userId, requestData);
+
+              // send ONLY to receiver
+              receiverSocket.send(
+                JSON.stringify({
+                  type: "ride-requests",
+                  ridesharing,
+                  message: "You have a new ride request",
+                }),
+              );
+
+              ws.send(
+                JSON.stringify({
+                  type: "ride-request-sent",
+                  message: "Your ride request has been sent successfully",
+                }),
+              );
+              break;
+            } catch (error) {
+              console.log(error);
+            }
+            break;
+
+          case "approve-ride-request":
+            try {
+              if (!ws.userId) {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Authentication required",
+                  }),
+                );
+              }
+
+              const receiverSocket = connectedUsers.get(requestData.userId);
+
+              if (
+                !receiverSocket ||
+                receiverSocket.readyState !== WebSocket.OPEN
+              ) {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Receiver is not online",
+                  }),
+                );
+              }
+
+              const ridesharing = await approveRequest(userId, requestData);
+
+              const rideInfo = await getRidesharingById(requestData.id);
+
+              // send ONLY to receiver
+              receiverSocket.send(
+                JSON.stringify({
+                  type: "approved-ride-request",
+                  rideInfo: rideInfo,
+                  message: "Your ride request has been approved",
+                }),
+              );
+
+              ws.send(
+                JSON.stringify({
+                  type: "ride-requests",
+                  ridesharing,
+                  message: "You accept the request",
+                }),
+              );
+              ws.send(
+                JSON.stringify({
+                  type: "approved-ride-request",
+                  rideInfo,
+                  message: "You accept the request",
+                }),
+              );
+              break;
             } catch (error) {
               console.log(error);
             }

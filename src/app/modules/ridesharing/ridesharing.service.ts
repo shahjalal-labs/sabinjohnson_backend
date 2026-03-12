@@ -2,6 +2,7 @@ import { Ridesharing } from "@prisma/client";
 import { calculateDistanceKm } from "../../../helpers/calculateDistance";
 import redisClient from "../../../helpers/redis";
 import prisma from "../../../shared/prisma";
+import ApiError from "../../../errors/ApiErrors";
 
 const findRider = async (payload: {
   pickLatitude: number;
@@ -87,19 +88,180 @@ const findRider = async (payload: {
   return result;
 };
 
-const sendRequestToRider = async (
+export const sendRequestToRider = async (
+  userId: string,
+  requestData: Ridesharing,
+) => {
+  await prisma.ridesharing.create({
+    data: {
+      ...requestData,
+      userId,
+    },
+  });
+
+  const riderRequests = await prisma.ridesharing.findMany({
+    where: {
+      riderId: requestData.riderId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    select: {
+      id: true,
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          phoneNumber: true,
+        },
+      },
+      rider: {
+        select: {
+          id: true,
+          fullName: true,
+          phoneNumber: true,
+        },
+      },
+      pickupAddress: true,
+      destinationAddress: true,
+      etaMinutes: true,
+      userDistanceKm: true,
+      cost: true,
+      payWith: true,
+      createdAt: true,
+      status: true,
+    },
+  });
+
+  return riderRequests;
+};
+
+export const approveRequest = async (
   riderId: string,
   requestData: Ridesharing,
 ) => {
-  await redisClient.publish(
-    `riderRequest:${riderId}`,
-    JSON.stringify(requestData),
-  );
-
-  await prisma.ridesharing.create({
-    data: requestData,
+  await prisma.ridesharing.update({
+    where: { id: requestData.id },
+    data: {
+      status: "Accepted",
+    },
   });
 
+  const ridesharingInfo = await prisma.ridesharing.findMany({
+    where: {
+      riderId: riderId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    select: {
+      id: true,
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          phoneNumber: true,
+        },
+      },
+      rider: {
+        select: {
+          id: true,
+          fullName: true,
+          phoneNumber: true,
+        },
+      },
+      pickupAddress: true,
+      destinationAddress: true,
+      etaMinutes: true,
+      userDistanceKm: true,
+      cost: true,
+      payWith: true,
+      createdAt: true,
+      status: true,
+    },
+  });
+
+  return ridesharingInfo;
+};
+
+export const currentRide = async (userId: string) => {
+  const currentRide = await prisma.ridesharing.findFirst({
+    where: {
+      userId: userId,
+      status: "Accepted",
+    },
+    select: {
+      id: true,
+      rider: {
+        select: {
+          id: true,
+          fullName: true,
+          phoneNumber: true,
+        },
+      },
+      pickupAddress: true,
+      destinationAddress: true,
+      etaMinutes: true,
+      cost: true,
+      payWith: true,
+      createdAt: true,
+      status: true,
+    },
+  });
+
+  return currentRide;
+};
+
+export const cancelRide = async (
+  rideId: string,
+  userId: string,
+  cancelReason?: string,
+) => {
+  const rideInfo = await prisma.ridesharing.findUnique({
+    where: { id: rideId },
+  });
+  if (!rideInfo) throw new ApiError(404, "Ride not found");
+
+  const cancelledBy = rideInfo.userId === userId ? "User" : "Rider";
+
+  await prisma.ridesharing.update({
+    where: { id: rideId },
+    data: {
+      status: "Cancelled",
+      cancelledBy,
+      cancelReason: cancelReason || null,
+    },
+  });
+  return;
+};
+
+export const startRide = async (rideId: string) => {
+  const rideInfo = await prisma.ridesharing.findUnique({
+    where: { id: rideId },
+  });
+  if (!rideInfo) throw new ApiError(404, "Ride not found");
+
+  await prisma.ridesharing.update({
+    where: { id: rideId },
+    data: {
+      status: "Started",
+    },
+  });
+  return;
+};
+
+export const endRide = async (rideId: string) => {
+  const rideInfo = await prisma.ridesharing.findUnique({
+    where: { id: rideId },
+  });
+  if (!rideInfo) throw new ApiError(404, "Ride not found");
+
+  await prisma.ridesharing.update({
+    where: { id: rideId },
+    data: {
+      status: "Completed",
+    },
+  });
   return;
 };
 
@@ -107,8 +269,37 @@ const getAllRidesharings = async () => {
   return;
 };
 
-const getRidesharingById = async (id: string) => {
-  return;
+export const getRidesharingById = async (id: string) => {
+  const rideInfo = await prisma.ridesharing.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          phoneNumber: true,
+        },
+      },
+      rider: {
+        select: {
+          id: true,
+          fullName: true,
+          phoneNumber: true,
+        },
+      },
+      pickupAddress: true,
+      destinationAddress: true,
+      etaMinutes: true,
+      cost: true,
+      payWith: true,
+      createdAt: true,
+      status: true,
+    },
+  });
+  return rideInfo;
 };
 
 const updateRidesharing = async (id: string, data: any) => {
@@ -122,6 +313,11 @@ const deleteRidesharing = async (id: string) => {
 export const ridesharingServices = {
   findRider,
   sendRequestToRider,
+  currentRide,
+  approveRequest,
+  cancelRide,
+  startRide,
+  endRide,
   getAllRidesharings,
   getRidesharingById,
   updateRidesharing,

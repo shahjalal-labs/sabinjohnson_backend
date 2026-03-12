@@ -13,11 +13,53 @@ const findRider = catchAsync(async (req, res) => {
 });
 
 const sendRequestToRider = catchAsync(async (req, res) => {
-  await ridesharingServices.sendRequestToRider(req.params.id, req.body);
+  await ridesharingServices.sendRequestToRider(req.user.id, req.body);
   sendResponse(res, {
     success: true,
     statusCode: 200,
     message: "Request has been sent to rider successfully",
+  });
+});
+
+const currentRide = catchAsync(async (req, res) => {
+  const result = await ridesharingServices.currentRide(req.user.id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Current ride has been retrieved successfully",
+    data: result,
+  });
+});
+
+const cancelRide = catchAsync(async (req, res) => {
+  const result = await ridesharingServices.cancelRide(
+    req.params.rideId,
+    req.user.id,
+    req.body.cancelReason,
+  );
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Ride has been cancelled successfully",
+    data: result,
+  });
+});
+
+const startRide = catchAsync(async (req, res) => {
+  await ridesharingServices.startRide(req.params.rideId);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Ride has been started successfully",
+  });
+});
+
+const endRide = catchAsync(async (req, res) => {
+  await ridesharingServices.endRide(req.params.rideId);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Ride has been completed successfully",
   });
 });
 
@@ -32,7 +74,9 @@ const getAllRidesharings = catchAsync(async (req, res) => {
 });
 
 const getRidesharingById = catchAsync(async (req, res) => {
-  const result = await ridesharingServices.getRidesharingById(req.params.id);
+  const result = await ridesharingServices.getRidesharingById(
+    req.params.rideId,
+  );
   sendResponse(res, {
     success: true,
     statusCode: 200,
@@ -62,6 +106,10 @@ const deleteRidesharing = catchAsync(async (req, res) => {
 export const ridesharingControllers = {
   findRider,
   sendRequestToRider,
+  currentRide,
+  cancelRide,
+  startRide,
+  endRide,
   getAllRidesharings,
   getRidesharingById,
   updateRidesharing,
