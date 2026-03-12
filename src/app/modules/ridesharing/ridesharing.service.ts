@@ -7,8 +7,10 @@ import ApiError from "../../../errors/ApiErrors";
 const findRider = async (payload: {
   pickLatitude: number;
   pickLongitude: number;
+  pickupAddress: string;
   destinationLat: number;
   destinationLong: number;
+  destinationAddress: string;
   paywith: string;
 }) => {
   const radius = 5; // km
@@ -76,10 +78,12 @@ const findRider = async (payload: {
         pickup: {
           latitude: payload.pickLatitude,
           longitude: payload.pickLongitude,
+          address: payload.pickupAddress,
         },
         destination: {
           latitude: payload.destinationLat,
           longitude: payload.destinationLong,
+          address: payload.destinationAddress,
         },
       };
     }),
