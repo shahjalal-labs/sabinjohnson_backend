@@ -35,9 +35,6 @@ router.post(
   auth(UserRole.Rider),
   ridesharingControllers.endRide,
 );
-router.get("/", ridesharingControllers.getAllRidesharings);
 router.get("/:rideId", auth(), ridesharingControllers.getRidesharingById);
-router.patch("/:id", ridesharingControllers.updateRidesharing);
-router.delete("/:id", ridesharingControllers.deleteRidesharing);
 
 export const ridesharingRoutes = router;

@@ -63,16 +63,6 @@ const endRide = catchAsync(async (req, res) => {
   });
 });
 
-const getAllRidesharings = catchAsync(async (req, res) => {
-  const result = await ridesharingServices.getAllRidesharings();
-  sendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: "All ridesharings has been retrived successfully",
-    data: result,
-  });
-});
-
 const getRidesharingById = catchAsync(async (req, res) => {
   const result = await ridesharingServices.getRidesharingById(
     req.params.rideId,
@@ -85,24 +75,6 @@ const getRidesharingById = catchAsync(async (req, res) => {
   });
 });
 
-const updateRidesharing = catchAsync(async (req, res) => {
-  await ridesharingServices.updateRidesharing(req.params.id, req.body);
-  sendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: "ridesharing has been updated successfully",
-  });
-});
-
-const deleteRidesharing = catchAsync(async (req, res) => {
-  await ridesharingServices.deleteRidesharing(req.params.id);
-  sendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: "ridesharing has been deleted successfully",
-  });
-});
-
 export const ridesharingControllers = {
   findRider,
   sendRequestToRider,
@@ -110,8 +82,5 @@ export const ridesharingControllers = {
   cancelRide,
   startRide,
   endRide,
-  getAllRidesharings,
   getRidesharingById,
-  updateRidesharing,
-  deleteRidesharing,
 };

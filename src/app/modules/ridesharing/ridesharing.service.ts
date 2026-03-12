@@ -203,7 +203,10 @@ export const currentRide = async (userId: string) => {
           phoneNumber: true,
         },
       },
+      pickupLongitude: true,
       pickupAddress: true,
+      destinationLat: true,
+      destinationLong: true,
       destinationAddress: true,
       etaMinutes: true,
       cost: true,
@@ -269,10 +272,6 @@ export const endRide = async (rideId: string) => {
   return;
 };
 
-const getAllRidesharings = async () => {
-  return;
-};
-
 export const getRidesharingById = async (id: string) => {
   const rideInfo = await prisma.ridesharing.findUnique({
     where: {
@@ -294,7 +293,11 @@ export const getRidesharingById = async (id: string) => {
           phoneNumber: true,
         },
       },
+      pickupLatitude: true,
+      pickupLongitude: true,
       pickupAddress: true,
+      destinationLat: true,
+      destinationLong: true,
       destinationAddress: true,
       etaMinutes: true,
       cost: true,
@@ -306,14 +309,6 @@ export const getRidesharingById = async (id: string) => {
   return rideInfo;
 };
 
-const updateRidesharing = async (id: string, data: any) => {
-  return;
-};
-
-const deleteRidesharing = async (id: string) => {
-  return;
-};
-
 export const ridesharingServices = {
   findRider,
   sendRequestToRider,
@@ -322,8 +317,5 @@ export const ridesharingServices = {
   cancelRide,
   startRide,
   endRide,
-  getAllRidesharings,
   getRidesharingById,
-  updateRidesharing,
-  deleteRidesharing,
 };
