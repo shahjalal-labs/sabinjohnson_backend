@@ -26,6 +26,7 @@ model User {
   riderRide    Ridesharing[] @relation("Rider")
   room1        Room[]        @relation("User1")
   room2        Room[]        @relation("User2")
+  riderRatings Rating[]      @relation("Rider")
 
   @@map("users")
 }
@@ -47,6 +48,19 @@ model Vehicle {
   user              User          @relation(fields: [userId], references: [id])
 
   @@map("vehicles")
+}
+
+model Label {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @db.ObjectId
+  labelName          String
+  destinationLat     Float
+  destinationLong    Float
+  destinationAddress String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("labels")
 }
 
 model Ridesharing {
@@ -73,6 +87,21 @@ model Ridesharing {
   rider              User              @relation("Rider", fields: [riderId], references: [id])
 
   @@map("ridesharing")
+}
+
+model Rating {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  rideId    String   @db.ObjectId
+  riderId   String   @db.ObjectId
+  userId    String   @db.ObjectId
+  rating    Float
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rider     User     @relation("Rider", fields: [riderId], references: [id])
+
+  @@unique([rideId, userId])
+  @@map("ratings")
 }
 
 model Room {

@@ -41,5 +41,10 @@ router.post(
   ridesharingControllers.endRide,
 );
 router.get("/:rideId", auth(), ridesharingControllers.getRidesharingById);
+router.get(
+  "/my/ride-history",
+  auth(UserRole.User),
+  ridesharingControllers.myRideHistory,
+);
 
 export const ridesharingRoutes = router;

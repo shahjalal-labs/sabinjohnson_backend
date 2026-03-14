@@ -345,6 +345,54 @@ export const endRide = async (rideId: string) => {
   return;
 };
 
+const myRideHistory = async (userId: string) => {
+  const rideHistory = await prisma.ridesharing.findMany({
+    where: {
+      userId: userId,
+      status: "Completed",
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    select: {
+      id: true,
+      rider: {
+        select: {
+          id: true,
+          fullName: true,
+          profileImage: true,
+          riderRatings: true,
+        },
+      },
+      pickupAddress: true,
+      destinationAddress: true,
+      cost: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  const rideHistoriesWithRatings = await Promise.all(
+    rideHistory.map(async (ride) => {
+      const ratings = ride.rider.riderRatings;
+      const averageRating =
+        ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length || 0;
+
+      return {
+        ...ride,
+        rider: {
+          id: ride.rider.id,
+          fullName: ride.rider.fullName,
+          profileImage: ride.rider.profileImage,
+          averageRating: Number(averageRating.toFixed(2)),
+        },
+      };
+    }),
+  );
+
+  return rideHistoriesWithRatings;
+};
+
 export const ridesharingServices = {
   findRider,
   sendRequestToRider,
@@ -355,4 +403,5 @@ export const ridesharingServices = {
   startRide,
   endRide,
   getRidesharingById,
+  myRideHistory,
 };

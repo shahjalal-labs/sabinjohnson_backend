@@ -85,6 +85,16 @@ const getRidesharingById = catchAsync(async (req, res) => {
   });
 });
 
+const myRideHistory = catchAsync(async (req, res) => {
+  const result = await ridesharingServices.myRideHistory(req.user.id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "My ride history has been retrieved successfully",
+    data: result,
+  });
+});
+
 export const ridesharingControllers = {
   findRider,
   sendRequestToRider,
@@ -94,4 +104,5 @@ export const ridesharingControllers = {
   startRide,
   endRide,
   getRidesharingById,
+  myRideHistory,
 };
