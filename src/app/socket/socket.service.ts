@@ -47,69 +47,13 @@ export function setupWebSocketServer(server: any) {
           type,
           receiverId,
           rideId,
-          coHostLink,
-          streamId,
+          roomId,
           content,
           requestData,
           cancelReason,
         } = JSON.parse(message.toString());
 
         switch (type) {
-          //send contribution request to another user
-          case "add-contributor": {
-            if (!receiverId) {
-              return ws.send(
-                JSON.stringify({
-                  type: "error",
-                  message: "receiver ID is required",
-                }),
-              );
-            }
-
-            // get receiver socket from Map
-            const receiverSocket = connectedUsers.get(receiverId);
-
-            if (
-              !receiverSocket ||
-              receiverSocket.readyState !== WebSocket.OPEN
-            ) {
-              return ws.send(
-                JSON.stringify({
-                  type: "error",
-                  message: "Receiver is not online",
-                }),
-              );
-            }
-
-            const senderInfo = await prisma.user.findUnique({
-              where: { id: ws.userId },
-              select: {
-                id: true,
-                fullName: true,
-                profileImage: true,
-              },
-            });
-            if (!senderInfo)
-              return ws.send(
-                JSON.stringify({
-                  type: "error",
-                  message: "Sender not found",
-                }),
-              );
-
-            // send ONLY to receiver
-            receiverSocket.send(
-              JSON.stringify({
-                type: "contribution-request",
-                from: senderInfo,
-                link: coHostLink,
-                streamId: streamId,
-              }),
-            );
-
-            break;
-          }
-
           case "send-ride-request":
             try {
               if (!ws.userId) {
@@ -428,7 +372,15 @@ export function setupWebSocketServer(server: any) {
             }
             break;
 
-          case "send-message": {
+          case "subscribe-room": {
+            if (!ws.userId) {
+              return ws.send(
+                JSON.stringify({
+                  type: "error",
+                  message: "Authentication required",
+                }),
+              );
+            }
             if (!receiverId) {
               return ws.send(
                 JSON.stringify({
@@ -438,12 +390,94 @@ export function setupWebSocketServer(server: any) {
               );
             }
 
-            const senderInfo = await prisma.user.findUnique({
-              where: { id: userId },
+            const userIds = [userId, receiverId].sort().join("_");
+            const roomInfo = await prisma.room.upsert({
+              where: {
+                userIds,
+              },
+              create: {
+                user1Id: userId,
+                user2Id: receiverId,
+                userIds,
+              },
+              update: {},
               select: {
                 id: true,
-                fullName: true,
-                profileImage: true,
+                user1: {
+                  select: {
+                    id: true,
+                    fullName: true,
+                    profileImage: true,
+                    phoneNumber: true,
+                  },
+                },
+                user2: {
+                  select: {
+                    id: true,
+                    fullName: true,
+                    profileImage: true,
+                    phoneNumber: true,
+                  },
+                },
+                messages: {
+                  orderBy: { createdAt: "desc" },
+                  select: {
+                    id: true,
+                    content: true,
+                    senderId: true,
+                    createdAt: true,
+                  },
+                },
+              },
+            });
+
+            ws.send(
+              JSON.stringify({
+                type: "subscribed-room",
+                message: "Subscribed to room successfully",
+                roomInfo: {
+                  id: roomInfo.id,
+                  user:
+                    roomInfo.user1.id === userId
+                      ? roomInfo.user2
+                      : roomInfo.user1,
+                  message: roomInfo.messages,
+                },
+              }),
+            );
+
+            break;
+          }
+
+          case "send-message": {
+            if (!ws.userId) {
+              return ws.send(
+                JSON.stringify({
+                  type: "error",
+                  message: "Authentication required",
+                }),
+              );
+            }
+            if (!receiverId || !roomId) {
+              return ws.send(
+                JSON.stringify({
+                  type: "error",
+                  message: "receiver ID & room ID is required",
+                }),
+              );
+            }
+
+            const message = await prisma.message.create({
+              data: {
+                content,
+                senderId: userId,
+                roomId,
+              },
+              select: {
+                id: true,
+                content: true,
+                senderId: true,
+                createdAt: true,
               },
             });
 
@@ -451,8 +485,15 @@ export function setupWebSocketServer(server: any) {
             receiverSocket?.send(
               JSON.stringify({
                 type: "new-message",
-                message: content,
-                senderInfo,
+                receiverId,
+                message: message,
+              }),
+            );
+
+            ws.send(
+              JSON.stringify({
+                type: "message-sent",
+                message: "Message sent successfully",
               }),
             );
 

@@ -24,6 +24,8 @@ model User {
   userRide     Ridesharing[] @relation("User")
   vehicle      Vehicle?
   riderRide    Ridesharing[] @relation("Rider")
+  room1        Room[]        @relation("User1")
+  room2        Room[]        @relation("User2")
 
   @@map("users")
 }
@@ -74,13 +76,29 @@ model Ridesharing {
 }
 
 model Room {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  userIds   String[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  user1Id   String    @db.ObjectId
+  user2Id   String    @db.ObjectId
+  userIds   String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[]
+  user1     User      @relation("User1", fields: [user1Id], references: [id])
+  user2     User      @relation("User2", fields: [user2Id], references: [id])
 
   @@map("rooms")
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  roomId    String   @db.ObjectId
+  senderId  String   @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  room      Room     @relation(fields: [roomId], references: [id])
+
+  @@map("messages")
 }
 
 enum UserStatus {
