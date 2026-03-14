@@ -73,6 +73,16 @@ model Ridesharing {
   @@map("ridesharing")
 }
 
+model Room {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  userIds   String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("rooms")
+}
+
 enum UserStatus {
   Active
   Blocked

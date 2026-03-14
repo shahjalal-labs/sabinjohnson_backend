@@ -5,8 +5,11 @@ import { parse } from "url";
 import prisma from "../../shared/prisma";
 import {
   approveRequest,
+  cancelRide,
+  endRide,
   getRidesharingById,
   sendRequestToRider,
+  startRide,
 } from "../modules/ridesharing/ridesharing.service";
 
 interface CustomWebSocket extends WebSocket {
@@ -40,8 +43,16 @@ export function setupWebSocketServer(server: any) {
 
     ws.on("message", async (message: any) => {
       try {
-        const { type, receiverId, coHostLink, streamId, content, requestData } =
-          JSON.parse(message.toString());
+        const {
+          type,
+          receiverId,
+          rideId,
+          coHostLink,
+          streamId,
+          content,
+          requestData,
+          cancelReason,
+        } = JSON.parse(message.toString());
 
         switch (type) {
           //send contribution request to another user
@@ -132,14 +143,17 @@ export function setupWebSocketServer(server: any) {
                 );
               }
 
-              const ridesharing = await sendRequestToRider(userId, requestData);
+              const rideRequests = await sendRequestToRider(
+                userId,
+                requestData,
+              );
 
               // send ONLY to receiver
               receiverSocket.send(
                 JSON.stringify({
                   type: "ride-requests",
-                  ridesharing,
                   message: "You have a new ride request",
+                  rideRequests,
                 }),
               );
 
@@ -166,7 +180,26 @@ export function setupWebSocketServer(server: any) {
                 );
               }
 
-              const receiverSocket = connectedUsers.get(requestData.userId);
+              const rideInfo = await getRidesharingById(rideId);
+              if (!rideInfo) {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Ride request not found",
+                  }),
+                );
+              }
+
+              if (rideInfo.status !== "Pending") {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Only pending ride requests can be approved",
+                  }),
+                );
+              }
+
+              const receiverSocket = connectedUsers.get(rideInfo.user.id);
 
               if (
                 !receiverSocket ||
@@ -180,9 +213,7 @@ export function setupWebSocketServer(server: any) {
                 );
               }
 
-              const ridesharing = await approveRequest(userId, requestData);
-
-              const rideInfo = await getRidesharingById(requestData.id);
+              const rideRequests = await approveRequest(userId, rideId);
 
               // send ONLY to receiver
               receiverSocket.send(
@@ -196,22 +227,237 @@ export function setupWebSocketServer(server: any) {
               ws.send(
                 JSON.stringify({
                   type: "ride-requests",
-                  ridesharing,
-                  message: "You accept the request",
+                  message: "You have approved a ride request",
+                  rideRequests,
                 }),
               );
-              ws.send(
-                JSON.stringify({
-                  type: "approved-ride-request",
-                  rideInfo,
-                  message: "You accept the request",
-                }),
-              );
+
               break;
             } catch (error) {
               console.log(error);
             }
             break;
+
+          case "cancel-ride-request":
+            try {
+              if (!ws.userId) {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Authentication required",
+                  }),
+                );
+              }
+
+              const rideInfo = await getRidesharingById(rideId);
+              if (!rideInfo) {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Ride request not found",
+                  }),
+                );
+              }
+
+              if (rideInfo.status !== "Pending") {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Only pending ride requests can be cancelled",
+                  }),
+                );
+              }
+
+              await cancelRide(rideId, userId, cancelReason);
+
+              if (rideInfo.user.id === userId) {
+                const receiverSocket = connectedUsers.get(rideInfo.rider.id);
+                // send ONLY to receiver
+                receiverSocket?.send(
+                  JSON.stringify({
+                    type: "cancel-ride-request",
+                    message: "User has cancelled the ride request",
+                    rideInfo: rideInfo,
+                  }),
+                );
+
+                ws.send(
+                  JSON.stringify({
+                    type: "cancel-ride-request",
+                    message: "You have cancelled a ride request",
+                    rideInfo: rideInfo,
+                  }),
+                );
+              } else {
+                const receiverSocket = connectedUsers.get(rideInfo.user.id);
+                // send ONLY to receiver
+                receiverSocket?.send(
+                  JSON.stringify({
+                    type: "cancel-ride-request",
+                    message: "Rider has cancelled the ride request",
+                    rideInfo: rideInfo,
+                  }),
+                );
+
+                ws.send(
+                  JSON.stringify({
+                    type: "cancel-ride-request",
+                    message: "You have cancelled a ride request",
+                    rideInfo: rideInfo,
+                  }),
+                );
+              }
+
+              break;
+            } catch (error) {
+              console.log(error);
+            }
+            break;
+
+          case "start-ride":
+            try {
+              if (!ws.userId) {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Authentication required",
+                  }),
+                );
+              }
+
+              const rideInfo = await getRidesharingById(rideId);
+              if (!rideInfo) {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Ride request not found",
+                  }),
+                );
+              }
+
+              if (rideInfo.status !== "Accepted") {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Only accepted ride requests can be started",
+                  }),
+                );
+              }
+
+              const receiverSocket = connectedUsers.get(rideInfo.user.id);
+
+              await startRide(rideId);
+
+              // send ONLY to receiver
+              receiverSocket?.send(
+                JSON.stringify({
+                  type: "start-ride",
+                  message: "Your ride request has been started",
+                  rideInfo: rideInfo,
+                }),
+              );
+
+              ws.send(
+                JSON.stringify({
+                  type: "start-ride",
+                  message: "You have started a ride",
+                  rideInfo: rideInfo,
+                }),
+              );
+
+              break;
+            } catch (error) {
+              console.log(error);
+            }
+            break;
+
+          case "end-ride":
+            try {
+              if (!ws.userId) {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Authentication required",
+                  }),
+                );
+              }
+
+              const rideInfo = await getRidesharingById(rideId);
+              if (!rideInfo) {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Ride request not found",
+                  }),
+                );
+              }
+
+              if (rideInfo.status !== "Started") {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Only started ride requests can be ended",
+                  }),
+                );
+              }
+
+              const receiverSocket = connectedUsers.get(rideInfo.user.id);
+
+              await endRide(rideId);
+
+              // send ONLY to receiver
+              receiverSocket?.send(
+                JSON.stringify({
+                  type: "end-ride",
+                  message: "Your ride request has been ended",
+                  rideInfo: rideInfo,
+                }),
+              );
+
+              ws.send(
+                JSON.stringify({
+                  type: "end-ride",
+                  message: "You have ended a ride",
+                  rideInfo: rideInfo,
+                }),
+              );
+
+              break;
+            } catch (error) {
+              console.log(error);
+            }
+            break;
+
+          case "send-message": {
+            if (!receiverId) {
+              return ws.send(
+                JSON.stringify({
+                  type: "error",
+                  message: "receiver ID is required",
+                }),
+              );
+            }
+
+            const senderInfo = await prisma.user.findUnique({
+              where: { id: userId },
+              select: {
+                id: true,
+                fullName: true,
+                profileImage: true,
+              },
+            });
+
+            const receiverSocket = connectedUsers.get(receiverId);
+            receiverSocket?.send(
+              JSON.stringify({
+                type: "new-message",
+                message: content,
+                senderInfo,
+              }),
+            );
+
+            break;
+          }
 
           default:
             ws.send(

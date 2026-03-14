@@ -16,6 +16,11 @@ router.post(
   ridesharingControllers.sendRequestToRider,
 );
 router.get(
+  "/my-ride-requests",
+  auth(UserRole.Rider),
+  ridesharingControllers.myRideRequests,
+);
+router.get(
   "/current-ride",
   auth(UserRole.User),
   ridesharingControllers.currentRide,

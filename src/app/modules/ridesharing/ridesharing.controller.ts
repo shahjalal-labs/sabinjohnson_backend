@@ -21,6 +21,16 @@ const sendRequestToRider = catchAsync(async (req, res) => {
   });
 });
 
+const myRideRequests = catchAsync(async (req, res) => {
+  const result = await ridesharingServices.myRideRequests(req.user.id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "My ride requests have been retrieved successfully",
+    data: result,
+  });
+});
+
 const currentRide = catchAsync(async (req, res) => {
   const result = await ridesharingServices.currentRide(req.user.id);
   sendResponse(res, {
@@ -78,6 +88,7 @@ const getRidesharingById = catchAsync(async (req, res) => {
 export const ridesharingControllers = {
   findRider,
   sendRequestToRider,
+  myRideRequests,
   currentRide,
   cancelRide,
   startRide,

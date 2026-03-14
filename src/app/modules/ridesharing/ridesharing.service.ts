@@ -63,18 +63,22 @@ const findRider = async (payload: {
       ]);
 
       return {
-        id: riderId,
-        fullName: riderInfo?.fullName,
-        phoneNumber: riderInfo?.phoneNumber,
-        vehicleName: vehicleInfo?.vehicleName,
-
-        riderDistanceKm: Number(riderDistanceKm.toFixed(2)), // rider → pickup
-        tripDistanceKm: Number(tripDistanceKm.toFixed(2)), // pickup → destination
-
-        etaMinutes,
-        estimatedFare,
-
-        payWith: payload.paywith,
+        riderInfo: {
+          id: riderId,
+          fullName: riderInfo?.fullName,
+          avgRating: 4.5, // Placeholder for average rating
+          phoneNumber: riderInfo?.phoneNumber,
+        },
+        vehicleInfo: {
+          vehicleName: vehicleInfo?.vehicleName,
+        },
+        rideInfo: {
+          riderDistanceKm: Number(riderDistanceKm.toFixed(2)), // rider → pickup
+          tripDistanceKm: Number(tripDistanceKm.toFixed(2)), // pickup → destination
+          etaMinutes,
+          estimatedFare,
+          payWith: payload.paywith,
+        },
         pickup: {
           latitude: payload.pickLatitude,
           longitude: payload.pickLongitude,
@@ -92,20 +96,11 @@ const findRider = async (payload: {
   return result;
 };
 
-export const sendRequestToRider = async (
-  userId: string,
-  requestData: Ridesharing,
-) => {
-  await prisma.ridesharing.create({
-    data: {
-      ...requestData,
-      userId,
-    },
-  });
-
+const myRideRequests = async (userId: string) => {
   const riderRequests = await prisma.ridesharing.findMany({
     where: {
-      riderId: requestData.riderId,
+      riderId: userId,
+      status: "Pending",
     },
     orderBy: {
       createdAt: "desc",
@@ -140,12 +135,96 @@ export const sendRequestToRider = async (
   return riderRequests;
 };
 
-export const approveRequest = async (
-  riderId: string,
+export const sendRequestToRider = async (
+  userId: string,
   requestData: Ridesharing,
 ) => {
+  await prisma.ridesharing.create({
+    data: {
+      ...requestData,
+      userId,
+    },
+  });
+
+  const riderRequests = await prisma.ridesharing.findMany({
+    where: {
+      riderId: requestData.riderId,
+      status: "Pending",
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    select: {
+      id: true,
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          phoneNumber: true,
+        },
+      },
+      rider: {
+        select: {
+          id: true,
+          fullName: true,
+          phoneNumber: true,
+        },
+      },
+      pickupAddress: true,
+      destinationAddress: true,
+      etaMinutes: true,
+      userDistanceKm: true,
+      cost: true,
+      payWith: true,
+      createdAt: true,
+      status: true,
+    },
+  });
+
+  return riderRequests;
+};
+
+export const getRidesharingById = async (id: string) => {
+  const rideInfo = await prisma.ridesharing.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      status: true,
+      user: {
+        select: {
+          id: true,
+          fullName: true,
+          phoneNumber: true,
+        },
+      },
+      rider: {
+        select: {
+          id: true,
+          fullName: true,
+          phoneNumber: true,
+        },
+      },
+      pickupLatitude: true,
+      pickupLongitude: true,
+      pickupAddress: true,
+      destinationLat: true,
+      destinationLong: true,
+      destinationAddress: true,
+      etaMinutes: true,
+      cost: true,
+      payWith: true,
+      createdAt: true,
+    },
+  });
+
+  return rideInfo;
+};
+
+export const approveRequest = async (riderId: string, rideId: string) => {
   await prisma.ridesharing.update({
-    where: { id: requestData.id },
+    where: { id: rideId },
     data: {
       status: "Accepted",
     },
@@ -154,6 +233,7 @@ export const approveRequest = async (
   const ridesharingInfo = await prisma.ridesharing.findMany({
     where: {
       riderId: riderId,
+      status: "Pending",
     },
     orderBy: {
       createdAt: "desc",
@@ -192,7 +272,10 @@ export const currentRide = async (userId: string) => {
   const currentRide = await prisma.ridesharing.findFirst({
     where: {
       userId: userId,
-      status: "Accepted",
+      OR: [{ status: "Accepted" }, { status: "Started" }],
+    },
+    orderBy: {
+      createdAt: "desc",
     },
     select: {
       id: true,
@@ -243,11 +326,6 @@ export const cancelRide = async (
 };
 
 export const startRide = async (rideId: string) => {
-  const rideInfo = await prisma.ridesharing.findUnique({
-    where: { id: rideId },
-  });
-  if (!rideInfo) throw new ApiError(404, "Ride not found");
-
   await prisma.ridesharing.update({
     where: { id: rideId },
     data: {
@@ -258,11 +336,6 @@ export const startRide = async (rideId: string) => {
 };
 
 export const endRide = async (rideId: string) => {
-  const rideInfo = await prisma.ridesharing.findUnique({
-    where: { id: rideId },
-  });
-  if (!rideInfo) throw new ApiError(404, "Ride not found");
-
   await prisma.ridesharing.update({
     where: { id: rideId },
     data: {
@@ -272,46 +345,10 @@ export const endRide = async (rideId: string) => {
   return;
 };
 
-export const getRidesharingById = async (id: string) => {
-  const rideInfo = await prisma.ridesharing.findUnique({
-    where: {
-      id,
-    },
-    select: {
-      id: true,
-      user: {
-        select: {
-          id: true,
-          fullName: true,
-          phoneNumber: true,
-        },
-      },
-      rider: {
-        select: {
-          id: true,
-          fullName: true,
-          phoneNumber: true,
-        },
-      },
-      pickupLatitude: true,
-      pickupLongitude: true,
-      pickupAddress: true,
-      destinationLat: true,
-      destinationLong: true,
-      destinationAddress: true,
-      etaMinutes: true,
-      cost: true,
-      payWith: true,
-      createdAt: true,
-      status: true,
-    },
-  });
-  return rideInfo;
-};
-
 export const ridesharingServices = {
   findRider,
   sendRequestToRider,
+  myRideRequests,
   currentRide,
   approveRequest,
   cancelRide,
