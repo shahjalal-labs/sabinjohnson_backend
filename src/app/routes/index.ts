@@ -4,6 +4,7 @@ import { authRoute } from "../modules/auth/auth.routes";
 import { vehicleRoutes } from "../modules/vehicle/vehicle.routes";
 import { ridesharingRoutes } from "../modules/ridesharing/ridesharing.routes";
 import { ratingRoutes } from "../modules/rating/rating.routes";
+import { labelRoutes } from "../modules/label/label.routes";
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ const moduleRoutes = [
   { path: "/vehicle", route: vehicleRoutes },
   { path: "/ride-sharing", route: ridesharingRoutes },
   { path: "/rating", route: ratingRoutes },
+  { path: "/label", route: labelRoutes },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

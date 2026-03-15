@@ -1,6 +1,7 @@
 import { WebSocket } from "ws";
 import config from "../../config";
 import { jwtHelpers } from "../../helpers/jwtHelpers";
+import { Secret } from "jsonwebtoken";
 
 export function verifyWebSocketToken(ws: WebSocket, token: string) {
   if (!token) {
@@ -12,7 +13,7 @@ export function verifyWebSocketToken(ws: WebSocket, token: string) {
   try {
     const decoded = jwtHelpers.verifyToken(
       token,
-      config.jwt.jwt_secret as string
+      config.jwt.jwt_secret as Secret,
     );
     return decoded;
   } catch (error: any) {

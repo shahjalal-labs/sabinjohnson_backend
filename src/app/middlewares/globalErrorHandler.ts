@@ -12,9 +12,9 @@ const GlobalErrorHandler = (
   error: any,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
-  let statusCode: any = httpStatus.INTERNAL_SERVER_ERROR;
+  let statusCode: number = httpStatus.INTERNAL_SERVER_ERROR;
   let message = error.message || "Something went wrong!";
   let errorMessages: IGenericErrorMessage[] = [];
 
