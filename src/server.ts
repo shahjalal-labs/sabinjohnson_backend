@@ -5,7 +5,7 @@ import { setupWebSocketServer } from "./app/socket/socket.service";
 
 async function main() {
   const server: Server = app.listen(config.port, () => {
-    console.log("✅ Server is running on port", config.port);
+    console.log(`✅ Server is running on http://localhost:${config.port}`);
     console.log(
       `📊 BullMQ Dashboard at http://localhost:${config.port}/admin/queues`,
     );
