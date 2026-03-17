@@ -1,4 +1,4 @@
-import express, { Application, NextFunction, Request, Response } from "express";
+import express, { Application } from "express";
 import httpStatus from "http-status";
 import cors from "cors";
 import router from "./app/routes";
@@ -55,13 +55,13 @@ app.get("/metrics", async (req, res) => {
 });
 
 // Route handler for root endpoint
-app.get("/", (req: Request, res: Response) => {
+app.get("/", (req, res) => {
   res.send({
     Message: "Welcome to Sabin Johnson API",
   });
 });
 // Route handler for version-1 endpoint
-app.get("/api/v1", (req: Request, res: Response) => {
+app.get("/api/v1", (req, res) => {
   res.send({
     Message: "Welcome to Sabin Johnson API - Version 1",
   });
@@ -82,7 +82,7 @@ app.use(
 app.use(GlobalErrorHandler);
 
 // API Not found handler
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req, res, next) => {
   res.status(httpStatus.NOT_FOUND).json({
     success: false,
     message: "API NOT FOUND!",
