@@ -5,7 +5,7 @@ const moduleName = process.argv[2];
 
 if (!moduleName) {
   console.error(
-    "❌ Please provide a module name.\nUsage: node module.js moduleName"
+    "❌ Please provide a module name.\nUsage: node module.js moduleName",
   );
   process.exit(1);
 }
@@ -15,7 +15,7 @@ const baseDir = path.join(
   "src",
   "app",
   "modules",
-  moduleName.toLowerCase()
+  moduleName.toLowerCase(),
 );
 
 if (fs.existsSync(baseDir)) {
@@ -30,8 +30,7 @@ const capModule = capitalize(moduleName);
 
 const files = {
   [`${moduleName}.service.ts`]: `
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import prisma from "../../../shared/prisma";
 
 const create${capModule} = async (data: any) => {
   await prisma.${moduleName}.create({ data });
@@ -163,5 +162,5 @@ for (const [filename, content] of Object.entries(files)) {
 }
 
 console.log(
-  `✅ ${capModule} module created successfully at src/app/modules/${moduleName}`
+  `✅ ${capModule} module created successfully at src/app/modules/${moduleName}`,
 );
