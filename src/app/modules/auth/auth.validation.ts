@@ -1,0 +1,52 @@
+import { z } from "zod";
+
+const authLoginSchema = z.object({
+  identity: z
+    .string()
+    .email("Invalid email address")
+    .or(z.string().min(10, "Phone number must be at least 10 characters long")),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
+  fcmToken: z
+    .string()
+    .min(1, "FCM Token must be at least 1 character long")
+    .optional(),
+});
+
+const googleLoginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  firstName: z.string().min(1, "First Name is required"),
+  fcmToken: z.string().min(1, "FCM token is required"),
+});
+
+const locationUpdateSchema = z.object({
+  latitude: z
+    .number()
+    .min(-90, "Latitude must be greater than or equal to -90")
+    .max(90, "Latitude must be less than or equal to 90"),
+  longitude: z
+    .number()
+    .min(-180, "Longitude must be greater than or equal to -180")
+    .max(180, "Longitude must be less than or equal to 180"),
+});
+
+const updateProfileSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, "First name must be at least 2 characters long")
+    .optional(),
+  lastName: z
+    .string()
+    .min(2, "Last name must be at least 2 characters long")
+    .optional(),
+  mobile: z
+    .string()
+    .min(10, "Mobile must be at least 10 characters long")
+    .optional(),
+});
+
+export const authValidation = {
+  authLoginSchema,
+  updateProfileSchema,
+  googleLoginSchema,
+  locationUpdateSchema,
+};
