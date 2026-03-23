@@ -41,11 +41,20 @@ const createUser = async (payload: User) => {
 
   await redisClient.set(`otp:${payload.phoneNumber}`, otp, "EX", 300);
 
-  await phoneQueue.add("sendOtp", {
-    phoneNumber: payload.phoneNumber,
-    fullName: payload.fullName,
-    otp,
-  });
+  await phoneQueue.add(
+    "sendOtp",
+    {
+      phoneNumber: payload.phoneNumber,
+      fullName: payload.fullName,
+      otp,
+    },
+    {
+      removeOnComplete: {
+        age: 600,
+        count: 20,
+      },
+    },
+  );
 
   return otp;
 };
@@ -112,11 +121,20 @@ const resendOTP = async (phoneNumber: string) => {
 
   await redisClient.set(`otp:${phoneNumber}`, otp, "EX", 300);
 
-  await phoneQueue.add("sendOtp", {
-    phoneNumber: pendingUser.phoneNumber,
-    fullName: pendingUser.fullName,
-    otp,
-  });
+  await phoneQueue.add(
+    "sendOtp",
+    {
+      phoneNumber: pendingUser.phoneNumber,
+      fullName: pendingUser.fullName,
+      otp,
+    },
+    {
+      removeOnComplete: {
+        age: 600,
+        count: 20,
+      },
+    },
+  );
 
   return otp;
 };

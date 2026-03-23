@@ -134,11 +134,20 @@ const sendForgotPassword = async (identity: string) => {
 
     await redisClient.set(`otp:${identity}`, otp, "EX", 300);
 
-    await emailQueue.add("forgotPasswordOtp", {
-      email: user.email,
-      fullName: user.fullName,
-      otp: otp,
-    });
+    await emailQueue.add(
+      "forgotPasswordOtp",
+      {
+        email: user.email,
+        fullName: user.fullName,
+        otp: otp,
+      },
+      {
+        removeOnComplete: {
+          age: 600,
+          count: 20,
+        },
+      },
+    );
 
     return otp;
   } else {
@@ -153,11 +162,20 @@ const sendForgotPassword = async (identity: string) => {
 
     await redisClient.set(`otp:${identity}`, otp, "EX", 300);
 
-    await phoneQueue.add("forgotPasswordOtp", {
-      phoneNumber: user.phoneNumber,
-      fullName: user.fullName,
-      otp: otp,
-    });
+    await phoneQueue.add(
+      "forgotPasswordOtp",
+      {
+        phoneNumber: user.phoneNumber,
+        fullName: user.fullName,
+        otp: otp,
+      },
+      {
+        removeOnComplete: {
+          age: 600,
+          count: 20,
+        },
+      },
+    );
 
     return otp;
   }
