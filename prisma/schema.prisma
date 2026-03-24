@@ -27,8 +27,23 @@ model User {
   room1        Room[]        @relation("User1")
   room2        Room[]        @relation("User2")
   riderRatings Rating[]      @relation("Rider")
+  userRatings  Rating[]      @relation("User")
+  orders       Order[]
 
   @@map("users")
+}
+
+enum UserStatus {
+  Active
+  Blocked
+  Deleted
+}
+
+enum UserRole {
+  User
+  Rider
+  Food_Deliver
+  Admin
 }
 
 model Vehicle {
@@ -45,9 +60,15 @@ model Vehicle {
   status            VehicleStatus @default(Pending)
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
-  user              User          @relation(fields: [userId], references: [id])
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("vehicles")
+}
+
+enum VehicleStatus {
+  Pending
+  Approved
+  Rejected
 }
 
 model Label {
@@ -79,15 +100,50 @@ model Ridesharing {
   etaMinutes         Int
   cost               Float
   payWith            String
+  orderType          OrderType         @default(Ridesharing)
   status             RidesharingStatus @default(Pending)
   cancelledBy        UserRole?
   cancelReason       String?
+  orderId            String?           @db.ObjectId
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
-  user               User              @relation("User", fields: [userId], references: [id])
-  rider              User              @relation("Rider", fields: [riderId], references: [id])
+  user               User              @relation("User", fields: [userId], references: [id], onDelete: Cascade)
+  rider              User              @relation("Rider", fields: [riderId], references: [id], onDelete: Cascade)
 
   @@map("ridesharing")
+}
+
+enum OrderType {
+  Ridesharing
+  FoodDelivery
+}
+
+enum RidesharingStatus {
+  Pending
+  Accepted
+  Started
+  Completed
+  Cancelled
+}
+
+model Category {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  categoryName String   @unique
+  thumbnail    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model Order {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("orders")
 }
 
 model Rating {
@@ -99,7 +155,8 @@ model Rating {
   comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  rider     User     @relation("Rider", fields: [riderId], references: [id])
+  rider     User     @relation("Rider", fields: [riderId], references: [id], onDelete: Cascade)
+  user      User     @relation("User", fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([rideId, userId])
   @@map("ratings")
@@ -113,8 +170,8 @@ model Room {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   messages  Message[]
-  user1     User      @relation("User1", fields: [user1Id], references: [id])
-  user2     User      @relation("User2", fields: [user2Id], references: [id])
+  user1     User      @relation("User1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2     User      @relation("User2", fields: [user2Id], references: [id], onDelete: Cascade)
 
   @@map("rooms")
 }
@@ -126,34 +183,7 @@ model Message {
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  room      Room     @relation(fields: [roomId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   @@map("messages")
-}
-
-enum UserStatus {
-  Active
-  Blocked
-  Deleted
-}
-
-enum UserRole {
-  User
-  Rider
-  Food_Deliver
-  Admin
-}
-
-enum VehicleStatus {
-  Pending
-  Approved
-  Rejected
-}
-
-enum RidesharingStatus {
-  Pending
-  Accepted
-  Started
-  Completed
-  Cancelled
 }

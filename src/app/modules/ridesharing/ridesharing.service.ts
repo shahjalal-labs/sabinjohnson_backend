@@ -1,4 +1,4 @@
-import { Ridesharing } from "@prisma/client";
+import { OrderType, Ridesharing } from "@prisma/client";
 import { calculateDistanceKm } from "../../../helpers/calculateDistance";
 import redisClient from "../../../helpers/redis";
 import prisma from "../../../shared/prisma";
@@ -12,6 +12,8 @@ const findRider = async (payload: {
   destinationLong: number;
   destinationAddress: string;
   paywith: string;
+  orderType: OrderType;
+  orderId?: string;
 }) => {
   const radius = 5; // km
   const avgSpeedKmPerHour = 30;
@@ -78,6 +80,10 @@ const findRider = async (payload: {
           etaMinutes,
           estimatedFare,
           payWith: payload.paywith,
+        },
+        orderInfo: {
+          orderType: payload.orderType || OrderType.Ridesharing,
+          orderId: payload.orderId,
         },
         pickup: {
           latitude: payload.pickLatitude,

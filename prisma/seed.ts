@@ -23,19 +23,6 @@ async function main() {
     },
   });
 
-  // USER
-  await prisma.user.upsert({
-    where: { email: "ruhulamin.et15@gmail.com" },
-    update: {},
-    create: {
-      email: "ruhulamin.et15@gmail.com",
-      phoneNumber: "01700000001",
-      fullName: "Ruhul Amin",
-      password: hashedPassword,
-      role: "User",
-    },
-  });
-
   console.log("✅ Database seeded successfully");
 }
 

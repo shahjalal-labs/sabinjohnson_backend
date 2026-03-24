@@ -24,6 +24,7 @@ const upload = multer({
 const profileImage = upload.single("profileImage");
 const coverPhoto = upload.single("coverPhoto");
 const vehicleImage = upload.single("vehicleImage");
+const thumbnail = upload.single("thumbnail");
 
 // upload multiple image
 const uploadMultiple = upload.fields([
@@ -41,4 +42,5 @@ export const fileUploader = {
   profileImage,
   coverPhoto,
   vehicleImage,
+  thumbnail,
 };

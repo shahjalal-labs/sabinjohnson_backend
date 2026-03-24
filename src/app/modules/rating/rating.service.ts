@@ -52,7 +52,7 @@ const riderReviews = async (riderId: string) => {
       rating: true,
       comment: true,
       createdAt: true,
-      rider: {
+      user: {
         select: {
           id: true,
           fullName: true,
@@ -61,34 +61,22 @@ const riderReviews = async (riderId: string) => {
       },
     },
   });
-  return reviews;
-};
 
-const getAllRatings = async () => {
-  const results = await prisma.rating.findMany();
-  return results;
-};
-
-const getRatingById = async (id: string) => {
-  const result = await prisma.rating.findUnique({ where: { id } });
-  return result;
-};
-
-const updateRating = async (id: string, data: any) => {
-  await prisma.rating.update({ where: { id }, data });
-  return;
-};
-
-const deleteRating = async (id: string) => {
-  await prisma.rating.delete({ where: { id } });
-  return;
+  const averageRating =
+    reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length ||
+    0;
+  return {
+    rider: {
+      id: riderInfo.id,
+      fullName: riderInfo.fullName,
+      profileImage: riderInfo.profileImage,
+      averageRating: Number(averageRating.toFixed(2)),
+    },
+    reviews,
+  };
 };
 
 export const ratingServices = {
   createRating,
   riderReviews,
-  getAllRatings,
-  getRatingById,
-  updateRating,
-  deleteRating,
 };

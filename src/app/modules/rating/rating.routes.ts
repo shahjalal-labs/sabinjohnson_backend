@@ -11,8 +11,5 @@ router.get(
   auth(UserRole.User),
   ratingControllers.riderReviews,
 );
-router.get("/:id", ratingControllers.getRatingById);
-router.patch("/:id", ratingControllers.updateRating);
-router.delete("/:id", ratingControllers.deleteRating);
 
 export const ratingRoutes = router;
