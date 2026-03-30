@@ -8,27 +8,31 @@ generator client {
 }
 
 model User {
-  id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  fullName     String
-  email        String        @unique
-  phoneNumber  String        @unique
-  password     String?
-  city         String?
-  address      String?
-  profileImage String?
-  fcmToken     String?
-  role         UserRole      @default(User)
-  status       UserStatus    @default(Active)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  userRide     Ridesharing[] @relation("User")
-  vehicle      Vehicle?
-  riderRide    Ridesharing[] @relation("Rider")
-  room1        Room[]        @relation("User1")
-  room2        Room[]        @relation("User2")
-  riderRatings Rating[]      @relation("Rider")
-  userRatings  Rating[]      @relation("User")
-  orders       Order[]
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  fullName        String
+  email           String        @unique
+  phoneNumber     String        @unique
+  password        String?
+  city            String?
+  address         String?
+  profileImage    String?
+  fcmToken        String?
+  role            UserRole      @default(User)
+  status          UserStatus    @default(Active)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  userRide        Ridesharing[] @relation("User")
+  vehicle         Vehicle?
+  walletBalance   Float         @default(0)
+  riderRide       Ridesharing[] @relation("Rider")
+  room1           Room[]        @relation("User1")
+  room2           Room[]        @relation("User2")
+  riderRatings    Rating[]      @relation("Rider")
+  userRatings     Rating[]      @relation("User")
+  orders          Order[]
+  paymentsAsUser  Payment[]     @relation("User")
+  paymentsAsRider Payment[]     @relation("Rider")
+  withdrawals     Withdrawal[]
 
   @@map("users")
 }
@@ -109,6 +113,7 @@ model Ridesharing {
   updatedAt          DateTime          @updatedAt
   user               User              @relation("User", fields: [userId], references: [id], onDelete: Cascade)
   rider              User              @relation("Rider", fields: [riderId], references: [id], onDelete: Cascade)
+  payments           Payment[]
 
   @@map("ridesharing")
 }
@@ -123,7 +128,63 @@ enum RidesharingStatus {
   Accepted
   Started
   Completed
+  Paid
   Cancelled
+}
+
+model Payment {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  rideId    String        @db.ObjectId
+  userId    String        @db.ObjectId
+  riderId   String        @db.ObjectId
+  amount    Float
+  method    PaymentMethod @default(Cash)
+  status    PaymentStatus @default(Completed)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  ride      Ridesharing   @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  user      User          @relation("User", fields: [userId], references: [id], onDelete: Cascade)
+  rider     User          @relation("Rider", fields: [riderId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+enum PaymentMethod {
+  BePay
+  Cash
+  Card
+  PayPal
+}
+
+enum PaymentStatus {
+  Pending
+  Completed
+  Failed
+}
+
+model Withdrawal {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  riderId   String           @db.ObjectId
+  amount    Float
+  method    PayoutMethod     @default(BePay)
+  status    WithdrawalStatus @default(Pending)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  rider     User             @relation(fields: [riderId], references: [id], onDelete: Cascade)
+
+  @@map("withdrawals")
+}
+
+enum PayoutMethod {
+  PayPal
+  BePay
+  BankTransfer
+}
+
+enum WithdrawalStatus {
+  Pending
+  Completed
+  Failed
 }
 
 model Category {

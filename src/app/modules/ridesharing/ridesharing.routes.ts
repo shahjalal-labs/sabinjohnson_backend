@@ -40,11 +40,36 @@ router.post(
   auth(UserRole.Rider),
   ridesharingControllers.endRide,
 );
+router.post(
+  "/bepay-payment/:rideId",
+  auth(UserRole.User),
+  ridesharingControllers.payWithBepay,
+);
+router.post(
+  "/cash-payment/:rideId",
+  auth(UserRole.User),
+  ridesharingControllers.cashPayment,
+);
+router.post(
+  "/card-payment/:rideId",
+  auth(UserRole.User),
+  ridesharingControllers.payWithCard,
+);
+router.post(
+  "/paypal-payment/:rideId",
+  auth(UserRole.User),
+  ridesharingControllers.payWithPaypal,
+);
 router.get("/:rideId", auth(), ridesharingControllers.getRidesharingById);
 router.get(
   "/my/ride-history",
   auth(UserRole.User),
   ridesharingControllers.myRideHistory,
+);
+router.get(
+  "/my/wallet-history",
+  auth(UserRole.Rider),
+  ridesharingControllers.myWalletHistory,
 );
 
 export const ridesharingRoutes = router;

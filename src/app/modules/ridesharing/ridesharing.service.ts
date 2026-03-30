@@ -3,6 +3,7 @@ import { calculateDistanceKm } from "../../../helpers/calculateDistance";
 import redisClient from "../../../helpers/redis";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../../errors/ApiErrors";
+import { startOfWeek, endOfWeek, endOfMonth, startOfMonth } from "date-fns";
 
 const findRider = async (payload: {
   pickLatitude: number;
@@ -351,11 +352,153 @@ export const endRide = async (rideId: string) => {
   return;
 };
 
+const payWithBepay = async (rideId: string, userId: string) => {
+  const rideInfo = await prisma.ridesharing.findUnique({
+    where: { id: rideId },
+  });
+  if (!rideInfo) throw new ApiError(404, "Ride not found");
+  if (rideInfo.userId !== userId) throw new ApiError(403, "Unauthorized");
+
+  await prisma.$transaction(async (tx) => {
+    await tx.ridesharing.update({
+      where: { id: rideId },
+      data: {
+        status: "Paid",
+      },
+    });
+
+    await tx.payment.create({
+      data: {
+        userId,
+        amount: rideInfo.cost,
+        method: "BePay",
+        rideId,
+        riderId: rideInfo.riderId,
+      },
+    });
+
+    await tx.user.update({
+      where: { id: rideInfo.riderId },
+      data: {
+        walletBalance: {
+          increment: rideInfo.cost,
+        },
+      },
+    });
+  });
+
+  return;
+};
+
+const cashPayment = async (rideId: string, userId: string) => {
+  const rideInfo = await prisma.ridesharing.findUnique({
+    where: { id: rideId },
+  });
+  if (!rideInfo) throw new ApiError(404, "Ride not found");
+  if (rideInfo.userId !== userId) throw new ApiError(403, "Unauthorized");
+
+  await prisma.$transaction(async (tx) => {
+    await tx.ridesharing.update({
+      where: { id: rideId },
+      data: {
+        status: "Paid",
+      },
+    });
+
+    await tx.payment.create({
+      data: {
+        userId,
+        amount: rideInfo.cost,
+        method: "Cash",
+        rideId,
+        riderId: rideInfo.riderId,
+      },
+    });
+  });
+
+  return;
+};
+
+const payWithCard = async (rideId: string, userId: string) => {
+  const rideInfo = await prisma.ridesharing.findUnique({
+    where: { id: rideId },
+  });
+  if (!rideInfo) throw new ApiError(404, "Ride not found");
+  if (rideInfo.userId !== userId) throw new ApiError(403, "Unauthorized");
+
+  await prisma.$transaction(async (tx) => {
+    await tx.ridesharing.update({
+      where: { id: rideId },
+      data: {
+        status: "Paid",
+      },
+    });
+
+    await tx.payment.create({
+      data: {
+        userId,
+        amount: rideInfo.cost,
+        method: "Card",
+        rideId,
+        riderId: rideInfo.riderId,
+      },
+    });
+
+    await tx.user.update({
+      where: { id: rideInfo.riderId },
+      data: {
+        walletBalance: {
+          increment: rideInfo.cost,
+        },
+      },
+    });
+  });
+
+  return;
+};
+
+const payWithPaypal = async (rideId: string, userId: string) => {
+  const rideInfo = await prisma.ridesharing.findUnique({
+    where: { id: rideId },
+  });
+  if (!rideInfo) throw new ApiError(404, "Ride not found");
+  if (rideInfo.userId !== userId) throw new ApiError(403, "Unauthorized");
+
+  await prisma.$transaction(async (tx) => {
+    await tx.ridesharing.update({
+      where: { id: rideId },
+      data: {
+        status: "Paid",
+      },
+    });
+
+    await tx.payment.create({
+      data: {
+        userId,
+        amount: rideInfo.cost,
+        method: "PayPal",
+        rideId,
+        riderId: rideInfo.riderId,
+      },
+    });
+
+    await tx.user.update({
+      where: { id: rideInfo.riderId },
+      data: {
+        walletBalance: {
+          increment: rideInfo.cost,
+        },
+      },
+    });
+  });
+
+  return;
+};
+
 const myRideHistory = async (userId: string) => {
   const rideHistory = await prisma.ridesharing.findMany({
     where: {
       userId: userId,
-      status: "Completed",
     },
     orderBy: {
       createdAt: "desc",
@@ -373,6 +516,8 @@ const myRideHistory = async (userId: string) => {
       pickupAddress: true,
       destinationAddress: true,
       cost: true,
+      payWith: true,
+      status: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -399,6 +544,99 @@ const myRideHistory = async (userId: string) => {
   return rideHistoriesWithRatings;
 };
 
+const myWalletHistory = async (userId: string) => {
+  const userInfo = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  if (!userInfo) throw new ApiError(404, "User not found");
+
+  const now = new Date();
+
+  const startMonth = startOfMonth(now);
+  const endMonth = endOfMonth(now);
+  const startWeek = startOfWeek(now, { weekStartsOn: 1 }); // Monday
+  const endWeek = endOfWeek(now, { weekStartsOn: 1 }); // Sunday
+
+  const lastOneMonthPayments = await prisma.payment.findMany({
+    where: {
+      riderId: userId,
+      status: "Completed",
+      createdAt: {
+        gte: startMonth,
+        lte: endMonth,
+      },
+    },
+  });
+
+  const lastWeekPayments = await prisma.payment.findMany({
+    where: {
+      riderId: userId,
+      status: "Completed",
+      createdAt: {
+        gte: startWeek,
+        lte: endWeek,
+      },
+    },
+  });
+
+  const rideCount = await prisma.ridesharing.count({
+    where: {
+      riderId: userId,
+      OR: [{ status: "Completed" }, { status: "Paid" }],
+    },
+  });
+
+  const weekDaysOrder = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+  const daysMap: Record<string, number> = {
+    Mon: 0,
+    Tue: 0,
+    Wed: 0,
+    Thu: 0,
+    Fri: 0,
+    Sat: 0,
+    Sun: 0,
+  };
+
+  lastWeekPayments.forEach((p) => {
+    const day = new Date(p.createdAt).toLocaleDateString("en-US", {
+      weekday: "short",
+    });
+
+    daysMap[day] += p.amount;
+  });
+
+  const lastWeekEarnings = weekDaysOrder.map((day) => ({
+    day,
+    amount: daysMap[day],
+  }));
+
+  const withdrawalHistory = await prisma.withdrawal.findMany({
+    where: {
+      riderId: userId,
+    },
+    select: {
+      id: true,
+      amount: true,
+      createdAt: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return {
+    rideCount,
+    walletBalance: userInfo.walletBalance,
+    lastOneMonthEarnings: lastOneMonthPayments.reduce(
+      (sum, p) => sum + p.amount,
+      0,
+    ),
+    lastWeekEarnings,
+    withdrawalHistory,
+  };
+};
+
 export const ridesharingServices = {
   findRider,
   sendRequestToRider,
@@ -408,6 +646,11 @@ export const ridesharingServices = {
   cancelRide,
   startRide,
   endRide,
+  payWithBepay,
+  cashPayment,
+  payWithCard,
+  payWithPaypal,
   getRidesharingById,
   myRideHistory,
+  myWalletHistory,
 };

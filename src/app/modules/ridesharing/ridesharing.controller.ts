@@ -73,6 +73,42 @@ const endRide = catchAsync(async (req, res) => {
   });
 });
 
+const payWithBepay = catchAsync(async (req, res) => {
+  await ridesharingServices.payWithBepay(req.params.rideId, req.user.id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "BePay payment has been processed successfully",
+  });
+});
+
+const cashPayment = catchAsync(async (req, res) => {
+  await ridesharingServices.cashPayment(req.params.rideId, req.user.id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Cash payment has been processed successfully",
+  });
+});
+
+const payWithCard = catchAsync(async (req, res) => {
+  await ridesharingServices.payWithCard(req.params.rideId, req.user.id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Card payment has been processed successfully",
+  });
+});
+
+const payWithPaypal = catchAsync(async (req, res) => {
+  await ridesharingServices.payWithPaypal(req.params.rideId, req.user.id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "PayPal payment has been processed successfully",
+  });
+});
+
 const getRidesharingById = catchAsync(async (req, res) => {
   const result = await ridesharingServices.getRidesharingById(
     req.params.rideId,
@@ -94,6 +130,15 @@ const myRideHistory = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const myWalletHistory = catchAsync(async (req, res) => {
+  const result = await ridesharingServices.myWalletHistory(req.user.id);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "My wallet history has been retrieved successfully",
+    data: result,
+  });
+});
 
 export const ridesharingControllers = {
   findRider,
@@ -103,6 +148,11 @@ export const ridesharingControllers = {
   cancelRide,
   startRide,
   endRide,
+  payWithBepay,
+  cashPayment,
+  payWithCard,
+  payWithPaypal,
   getRidesharingById,
   myRideHistory,
+  myWalletHistory,
 };

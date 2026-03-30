@@ -6,6 +6,7 @@ import { ridesharingRoutes } from "../modules/ridesharing/ridesharing.routes";
 import { ratingRoutes } from "../modules/rating/rating.routes";
 import { labelRoutes } from "../modules/label/label.routes";
 import { categoryRoutes } from "../modules/category/category.routes";
+import { withdrawalRoutes } from "../modules/withdrawal/withdrawal.routes";
 
 const router = express.Router();
 
@@ -17,6 +18,7 @@ const moduleRoutes = [
   { path: "/rating", route: ratingRoutes },
   { path: "/label", route: labelRoutes },
   { path: "/category", route: categoryRoutes },
+  { path: "/withdrawal", route: withdrawalRoutes },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
