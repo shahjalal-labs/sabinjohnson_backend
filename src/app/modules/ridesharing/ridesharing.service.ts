@@ -361,7 +361,11 @@ const payWithBepay = async (rideId: string, userId: string) => {
     where: { id: rideId },
   });
   if (!rideInfo) throw new ApiError(404, "Ride not found");
-  if (rideInfo.userId !== userId) throw new ApiError(403, "Unauthorized");
+
+  const alreadyPaid = await prisma.payment.findUnique({
+    where: { rideId_userId: { rideId, userId } },
+  });
+  if (alreadyPaid) throw new ApiError(400, "Payment already processed");
 
   await prisma.$transaction(async (tx) => {
     await tx.ridesharing.update({
@@ -401,6 +405,11 @@ const cashPayment = async (rideId: string, userId: string) => {
   if (!rideInfo) throw new ApiError(404, "Ride not found");
   if (rideInfo.userId !== userId) throw new ApiError(403, "Unauthorized");
 
+  const alreadyPaid = await prisma.payment.findUnique({
+    where: { rideId_userId: { rideId, userId } },
+  });
+  if (alreadyPaid) throw new ApiError(400, "Payment already processed");
+
   await prisma.$transaction(async (tx) => {
     await tx.ridesharing.update({
       where: { id: rideId },
@@ -437,6 +446,11 @@ const payWithCard = async (
     where: { id: rideId },
   });
   if (!rideInfo) throw new ApiError(404, "Ride not found");
+
+  const alreadyPaid = await prisma.payment.findUnique({
+    where: { rideId_userId: { rideId, userId } },
+  });
+  if (alreadyPaid) throw new ApiError(400, "Payment already processed");
 
   let customerId = riderInfo.customerId;
 
@@ -522,6 +536,11 @@ const payWithPaypal = async (rideId: string, userId: string) => {
     where: { id: rideId },
   });
   if (!rideInfo) throw new ApiError(404, "Ride not found");
+
+  const alreadyPaid = await prisma.payment.findUnique({
+    where: { rideId_userId: { rideId, userId } },
+  });
+  if (alreadyPaid) throw new ApiError(400, "Payment already processed");
 
   const client = payPalClient();
   const request = new paypal.orders.OrdersCreateRequest();
