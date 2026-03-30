@@ -4,6 +4,7 @@ import redisClient from "../../../helpers/redis";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../../errors/ApiErrors";
 import { startOfWeek, endOfWeek, endOfMonth, startOfMonth } from "date-fns";
+import stripe from "../../../config/stripe";
 
 const findRider = async (payload: {
   pickLatitude: number;
@@ -419,42 +420,98 @@ const cashPayment = async (rideId: string, userId: string) => {
   return;
 };
 
-const payWithCard = async (rideId: string, userId: string) => {
+const payWithCard = async (
+  rideId: string,
+  userId: string,
+  paymentMethodId: string,
+) => {
+  const riderInfo = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  if (!riderInfo) throw new ApiError(404, "Rider not found");
+
   const rideInfo = await prisma.ridesharing.findUnique({
     where: { id: rideId },
   });
   if (!rideInfo) throw new ApiError(404, "Ride not found");
-  if (rideInfo.userId !== userId) throw new ApiError(403, "Unauthorized");
 
-  await prisma.$transaction(async (tx) => {
-    await tx.ridesharing.update({
-      where: { id: rideId },
-      data: {
-        status: "Paid",
-      },
+  let customerId = riderInfo.customerId;
+
+  if (!customerId) {
+    const customer = await stripe.customers.create({
+      name: riderInfo.fullName,
+      email: riderInfo.email,
+    });
+    customerId = customer.id;
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { customerId },
     });
 
-    await tx.payment.create({
-      data: {
-        userId,
-        amount: rideInfo.cost,
-        method: "Card",
-        rideId,
-        riderId: rideInfo.riderId,
+    await stripe.paymentMethods.attach(paymentMethodId, {
+      customer: customerId,
+    });
+    await stripe.customers.update(customerId, {
+      invoice_settings: {
+        default_payment_method: paymentMethodId,
       },
     });
-
-    await tx.user.update({
-      where: { id: rideInfo.riderId },
-      data: {
-        walletBalance: {
-          increment: rideInfo.cost,
-        },
-      },
-    });
+  }
+  await stripe.paymentMethods.attach(paymentMethodId, {
+    customer: customerId,
+  });
+  await stripe.customers.update(customerId, {
+    invoice_settings: {
+      default_payment_method: paymentMethodId,
+    },
   });
 
-  return;
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: Math.round(rideInfo.cost * 100), // Convert to cents
+    currency: "usd",
+    payment_method: paymentMethodId,
+    customer: customerId,
+    confirm: true,
+    description: `Payment success for ride ${rideId}`,
+    automatic_payment_methods: {
+      enabled: true,
+      allow_redirects: "never",
+    },
+  });
+
+  if (paymentIntent.status === "succeeded") {
+    await prisma.$transaction(async (tx) => {
+      await tx.ridesharing.update({
+        where: { id: rideId },
+        data: {
+          status: "Paid",
+        },
+      });
+
+      await tx.payment.create({
+        data: {
+          userId,
+          amount: rideInfo.cost,
+          method: "Card",
+          status: "Completed",
+          rideId,
+          riderId: rideInfo.riderId,
+        },
+      });
+
+      await tx.user.update({
+        where: { id: rideInfo.riderId },
+        data: {
+          walletBalance: {
+            increment: rideInfo.cost,
+          },
+        },
+      });
+    });
+    return;
+  }
+  throw new ApiError(400, "Payment failed");
 };
 
 const payWithPaypal = async (rideId: string, userId: string) => {

@@ -21,15 +21,16 @@ export default {
     email: process.env.EMAIL,
     app_pass: process.env.APP_PASS,
   },
-  openai: {
-    api_key: process.env.OPENAI_API_KEY,
-    model: process.env.OPENAI_MODEL || "gpt-3.5-turbo",
-  },
   bucket: {
     name: process.env.BUCKET_NAME,
     region: process.env.BUCKET_REGION,
     access_key: process.env.BUCKET_ACCESS_KEY,
     secret_key: process.env.BUCKET_SECRET_KEY,
     endpoint: process.env.BUCKET_ENDPOINT,
+  },
+  stripe: {
+    stripe_secret_key: process.env.STRIPE_SK,
+    stripe_public_key: process.env.STRIPE_PK,
+    webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
   },
 };

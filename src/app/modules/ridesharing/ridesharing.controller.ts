@@ -92,7 +92,11 @@ const cashPayment = catchAsync(async (req, res) => {
 });
 
 const payWithCard = catchAsync(async (req, res) => {
-  await ridesharingServices.payWithCard(req.params.rideId, req.user.id);
+  await ridesharingServices.payWithCard(
+    req.params.rideId,
+    req.user.id,
+    req.body.paymentMethodId,
+  );
   sendResponse(res, {
     success: true,
     statusCode: 200,

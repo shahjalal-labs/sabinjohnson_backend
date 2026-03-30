@@ -24,6 +24,7 @@ model User {
   userRide        Ridesharing[] @relation("User")
   vehicle         Vehicle?
   walletBalance   Float         @default(0)
+  customerId      String?
   riderRide       Ridesharing[] @relation("Rider")
   room1           Room[]        @relation("User1")
   room2           Room[]        @relation("User2")
@@ -146,6 +147,7 @@ model Payment {
   user      User          @relation("User", fields: [userId], references: [id], onDelete: Cascade)
   rider     User          @relation("Rider", fields: [riderId], references: [id], onDelete: Cascade)
 
+  @@unique([rideId, userId])
   @@map("payments")
 }
 
