@@ -33,4 +33,10 @@ export default {
     stripe_public_key: process.env.STRIPE_PK,
     webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
   },
+  paypal: {
+    client_id: process.env.PAYPAL_CLIENT_ID,
+    client_secret: process.env.PAYPAL_CLIENT_SECRET,
+    mode: process.env.PAYPAL_MODE,
+    webhook_id: process.env.PAYPAL_WEBHOOK_ID,
+  },
 };

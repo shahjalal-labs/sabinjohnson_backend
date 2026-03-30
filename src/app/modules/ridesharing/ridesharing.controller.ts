@@ -105,11 +105,15 @@ const payWithCard = catchAsync(async (req, res) => {
 });
 
 const payWithPaypal = catchAsync(async (req, res) => {
-  await ridesharingServices.payWithPaypal(req.params.rideId, req.user.id);
+  const data = await ridesharingServices.payWithPaypal(
+    req.params.rideId,
+    req.user.id,
+  );
   sendResponse(res, {
     success: true,
     statusCode: 200,
     message: "PayPal payment has been processed successfully",
+    data,
   });
 });
 

@@ -8,6 +8,7 @@ import prisma from "./shared/prisma";
 import { bullBoardRouter } from "./bullBoard";
 import basicAuth from "express-basic-auth";
 import client from "prom-client";
+import { paypalWebhookService } from "./app/modules/ridesharing/ridesharing.service";
 
 const app: Application = express();
 
@@ -33,6 +34,13 @@ const requestCounter = new client.Counter({
 })();
 
 app.use(cors());
+
+app.post(
+  "/api/v1/paypal-payment/webhook",
+  express.json({ type: "*/*" }),
+  paypalWebhookService,
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
@@ -77,6 +85,13 @@ app.use(
   }),
   bullBoardRouter,
 );
+
+app.get("/api/v1/paypal-payment/success", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "payment-success.html"));
+});
+app.get("/api/v1/paypal-payment/cancel", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "payment-cancel.html"));
+});
 
 // Global Error Handler
 app.use(GlobalErrorHandler);

@@ -5,6 +5,9 @@ import prisma from "../../../shared/prisma";
 import ApiError from "../../../errors/ApiErrors";
 import { startOfWeek, endOfWeek, endOfMonth, startOfMonth } from "date-fns";
 import stripe from "../../../config/stripe";
+import { payPalClient } from "../../../config/paypal";
+import paypal from "@paypal/checkout-server-sdk";
+import { Request, Response } from "express";
 
 const findRider = async (payload: {
   pickLatitude: number;
@@ -519,37 +522,92 @@ const payWithPaypal = async (rideId: string, userId: string) => {
     where: { id: rideId },
   });
   if (!rideInfo) throw new ApiError(404, "Ride not found");
-  if (rideInfo.userId !== userId) throw new ApiError(403, "Unauthorized");
 
-  await prisma.$transaction(async (tx) => {
-    await tx.ridesharing.update({
-      where: { id: rideId },
-      data: {
-        status: "Paid",
-      },
-    });
+  const client = payPalClient();
+  const request = new paypal.orders.OrdersCreateRequest();
 
-    await tx.payment.create({
-      data: {
-        userId,
-        amount: rideInfo.cost,
-        method: "PayPal",
-        rideId,
-        riderId: rideInfo.riderId,
-      },
-    });
-
-    await tx.user.update({
-      where: { id: rideInfo.riderId },
-      data: {
-        walletBalance: {
-          increment: rideInfo.cost,
+  request.requestBody({
+    intent: "CAPTURE",
+    purchase_units: [
+      {
+        amount: {
+          currency_code: "USD",
+          value: rideInfo.cost.toFixed(2),
         },
+        reference_id: userId,
+        custom_id: rideId,
       },
-    });
+    ],
+    application_context: {
+      brand_name: `Ride payment for ${rideInfo.riderId}`,
+      landing_page: "NO_PREFERENCE",
+      user_action: "PAY_NOW",
+      shipping_preference: "NO_SHIPPING",
+      return_url: `${process.env.BACKEND_BASE_URL}/api/v1/paypal-payment/success`,
+      cancel_url: `${process.env.BACKEND_BASE_URL}/api/v1/paypal-payment/cancel`,
+    },
   });
 
-  return;
+  const order = await client.execute(request);
+  const approvalUrl = order.result.links.find(
+    (link: any) => link.rel === "approve",
+  )?.href;
+
+  if (!approvalUrl) throw new ApiError(500, "PayPal approval URL missing");
+  return {
+    checkoutUrl: approvalUrl,
+  };
+};
+
+export const paypalWebhookService = async (req: Request, res: Response) => {
+  try {
+    console.log("Webhook received:", req.body.event_type);
+
+    if (req.body.event_type === "CHECKOUT.ORDER.APPROVED") {
+      const userId = req.body.resource.purchase_units[0].reference_id;
+      const rideId = req.body.resource.purchase_units[0].custom_id;
+
+      const rideInfo = await prisma.ridesharing.findUnique({
+        where: { id: rideId },
+      });
+      if (!rideInfo) throw new ApiError(404, "Ride not found");
+
+      await prisma.$transaction(async (tx) => {
+        await tx.ridesharing.update({
+          where: { id: rideId },
+          data: {
+            status: "Paid",
+          },
+        });
+
+        await tx.payment.create({
+          data: {
+            userId,
+            amount: rideInfo.cost,
+            method: "PayPal",
+            rideId,
+            riderId: rideInfo.riderId,
+          },
+        });
+
+        await tx.user.update({
+          where: { id: rideInfo.riderId },
+          data: {
+            walletBalance: {
+              increment: rideInfo.cost,
+            },
+          },
+        });
+      });
+
+      console.log("Ride Payment marked as paid for rideId:", rideId);
+    }
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error("Webhook error:", err);
+    res.sendStatus(500);
+  }
 };
 
 const myRideHistory = async (userId: string) => {
