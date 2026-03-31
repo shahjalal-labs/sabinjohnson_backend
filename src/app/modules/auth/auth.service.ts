@@ -16,7 +16,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const authLogin = async (payload: {
   identity: string;
   password: string;
-  fcmToken: string;
+  fcmToken?: string;
 }) => {
   const isEmail = emailRegex.test(payload.identity);
 
@@ -37,6 +37,12 @@ const authLogin = async (payload: {
   }
 
   if (!user) throw new ApiError(404, "User not found");
+  if (user.password === null) {
+    throw new ApiError(
+      401,
+      "You need to set a password or use forgot password to set a password for your account",
+    );
+  }
 
   const isPasswordValid = await bcrypt.compare(
     payload.password,
@@ -47,18 +53,18 @@ const authLogin = async (payload: {
     throw new ApiError(401, "Invalid credentials");
   }
 
-  await prisma.user.update({
-    where: {
-      id: user.id,
-    },
-    data: {
-      fcmToken: payload.fcmToken,
-    },
-  });
+  if (payload.fcmToken) {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        fcmToken: payload.fcmToken,
+      },
+    });
+  }
 
   const accessToken = jwtHelpers.generateToken(
     { id: user.id, email: user.email, role: user.role },
-    config.jwt.jwt_secret as Secret,
+    config.jwt.jwt_secret as string,
     config.jwt.expires_in as string,
   );
 
