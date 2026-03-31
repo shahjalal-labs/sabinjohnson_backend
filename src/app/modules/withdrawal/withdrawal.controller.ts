@@ -2,8 +2,21 @@ import { withdrawalServices } from "./withdrawal.service";
 import sendResponse from "../../../shared/sendResponse";
 import catchAsync from "../../../shared/catchAsync";
 
-const createWithdrawal = catchAsync(async (req, res) => {
-  const response = await withdrawalServices.createWithdrawal(
+const withdrawalWithCard = catchAsync(async (req, res) => {
+  const response = await withdrawalServices.withdrawalWithCard(
+    req.body,
+    req.user.id,
+  );
+  sendResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: "The withdrawal has been created successfully",
+    data: response,
+  });
+});
+
+const withdrawalWithPaypal = catchAsync(async (req, res) => {
+  const response = await withdrawalServices.withdrawalWithPaypal(
     req.body,
     req.user.id,
   );
@@ -54,7 +67,8 @@ const deleteWithdrawal = catchAsync(async (req, res) => {
 });
 
 export const withdrawalControllers = {
-  createWithdrawal,
+  withdrawalWithCard,
+  withdrawalWithPaypal,
   getAllWithdrawals,
   getWithdrawalById,
   updateWithdrawal,

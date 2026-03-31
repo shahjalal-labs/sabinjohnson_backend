@@ -6,9 +6,14 @@ import { UserRole } from "@prisma/client";
 const router = express.Router();
 
 router.post(
-  "/create",
+  "/card",
   auth(UserRole.Rider),
-  withdrawalControllers.createWithdrawal,
+  withdrawalControllers.withdrawalWithCard,
+);
+router.post(
+  "/paypal",
+  auth(UserRole.Rider),
+  withdrawalControllers.withdrawalWithPaypal,
 );
 router.get("/", withdrawalControllers.getAllWithdrawals);
 router.get("/:id", withdrawalControllers.getWithdrawalById);
