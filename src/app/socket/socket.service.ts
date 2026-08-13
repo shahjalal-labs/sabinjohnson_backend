@@ -500,6 +500,39 @@ export function setupWebSocketServer(server: any) {
             break;
           }
 
+          case "check-online-status": {
+            if (!ws.userId) {
+              return ws.send(
+                JSON.stringify({
+                  type: "error",
+                  message: "Authentication required",
+                }),
+              );
+            }
+            if (!receiverId) {
+              return ws.send(
+                JSON.stringify({
+                  type: "error",
+                  message: "receiver ID is required",
+                }),
+              );
+            }
+
+            const receiverSocket = connectedUsers.get(receiverId);
+            const isOnline = !!receiverSocket && receiverSocket.readyState === WebSocket.OPEN;
+
+            ws.send(
+              JSON.stringify({
+                type: "online-status",
+                receiverId,
+                isOnline,
+                message: isOnline ? "User is online" : "User is offline",
+              }),
+            );
+
+            break;
+          }
+
           default:
             ws.send(
               JSON.stringify({
