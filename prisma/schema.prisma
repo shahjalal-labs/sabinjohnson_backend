@@ -19,6 +19,7 @@ model User {
   fcmToken        String?
   role            UserRole      @default(User)
   status          UserStatus    @default(Active)
+  isOnline        Boolean       @default(false)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   userRide        Ridesharing[] @relation("User")

@@ -65,6 +65,19 @@ const getSingleUser = catchAsync(async (req, res) => {
   });
 });
 
+const toggleOnlineStatus = catchAsync(async (req, res) => {
+  const { id } = req.user;
+  const { isOnline } = req.body;
+  
+  const result = await userService.toggleOnlineStatus(id, isOnline);
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: `User is now ${isOnline ? 'online' : 'offline'}`,
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createUser,
   signupVerification,
@@ -72,4 +85,5 @@ export const UserControllers = {
   setPassword,
   profileSetup,
   getSingleUser,
+  toggleOnlineStatus,
 };

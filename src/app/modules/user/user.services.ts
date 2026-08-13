@@ -191,6 +191,23 @@ const getSingleUser = async (id: string) => {
   };
 };
 
+const toggleOnlineStatus = async (userId: string, isOnline: boolean) => {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    throw new ApiError(404, "User not found!");
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: { isOnline },
+  });
+
+  return {
+    id: updatedUser.id,
+    isOnline: updatedUser.isOnline,
+  };
+};
+
 export const userService = {
   createUser,
   signupVerification,
@@ -198,4 +215,5 @@ export const userService = {
   setPassword,
   profileSetup,
   getSingleUser,
+  toggleOnlineStatus,
 };

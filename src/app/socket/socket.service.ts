@@ -51,6 +51,7 @@ export function setupWebSocketServer(server: any) {
           content,
           requestData,
           cancelReason,
+          isOnline,
         } = JSON.parse(message.toString());
 
         switch (type) {
@@ -530,6 +531,41 @@ export function setupWebSocketServer(server: any) {
               }),
             );
 
+            break;
+          }
+
+          case "toggle-online": {
+            try {
+              if (!ws.userId) {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Authentication required",
+                  }),
+                );
+              }
+
+              const newOnlineStatus = !!isOnline; // true or false from client message payload
+
+              const updatedUser = await prisma.user.update({
+                where: { id: userId },
+                data: { isOnline: newOnlineStatus },
+                select: { id: true, isOnline: true }
+              });
+
+              ws.send(
+                JSON.stringify({
+                  type: "toggle-online",
+                  message: `You are now ${newOnlineStatus ? 'online' : 'offline'}`,
+                  user: updatedUser,
+                }),
+              );
+
+              break;
+            } catch (error) {
+              console.log(error);
+              ws.send(JSON.stringify({ type: "error", message: "Failed to toggle online status" }));
+            }
             break;
           }
 

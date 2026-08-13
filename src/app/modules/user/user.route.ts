@@ -36,6 +36,11 @@ router.patch(
   parseBodyData,
   UserControllers.profileSetup,
 );
+router.patch(
+  "/toggle-online",
+  auth(),
+  UserControllers.toggleOnlineStatus,
+);
 router.get("/:id", UserControllers.getSingleUser);
 
 export const userRoutes = router;
