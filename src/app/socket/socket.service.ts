@@ -55,6 +55,70 @@ export function setupWebSocketServer(server: any) {
         } = JSON.parse(message.toString());
 
         switch (type) {
+          case "my-ride-requests":
+            try {
+              if (!ws.userId) {
+                return ws.send(
+                  JSON.stringify({
+                    type: "error",
+                    message: "Authentication required",
+                  }),
+                );
+              }
+
+              const rideRequests = await prisma.ridesharing.findMany({
+                where: {
+                  riderId: ws.userId,
+                  status: "Pending",
+                },
+                orderBy: {
+                  createdAt: "desc",
+                },
+                select: {
+                  id: true,
+                  user: {
+                    select: {
+                      id: true,
+                      fullName: true,
+                      phoneNumber: true,
+                    },
+                  },
+                  rider: {
+                    select: {
+                      id: true,
+                      fullName: true,
+                      phoneNumber: true,
+                    },
+                  },
+                  pickupAddress: true,
+                  pickupLatitude: true,
+                  pickupLongitude: true,
+                  destinationAddress: true,
+                  destinationLat: true,
+                  destinationLong: true,
+                  etaMinutes: true,
+                  userDistanceKm: true,
+                  cost: true,
+                  payWith: true,
+                  createdAt: true,
+                  status: true,
+                },
+              });
+
+              ws.send(
+                JSON.stringify({
+                  type: "my-ride-requests",
+                  message: "Your ride requests fetched successfully",
+                  rideRequests,
+                }),
+              );
+
+              break;
+            } catch (error) {
+              console.log(error);
+            }
+            break;
+
           case "send-ride-request":
             try {
               if (!ws.userId) {
