@@ -2124,8 +2124,6 @@ export function setupWebSocketServer(server: any) {
 export const socket = { wss };
 ```
 
-I will implement websocket Front end part. So I need to understand the back end socket pattern. Please guide me everything details. so that I can implement the logic. You will guide me only the data pattern like send event etc, response got etc.
-
 like the below:--
 
 event: send offer
