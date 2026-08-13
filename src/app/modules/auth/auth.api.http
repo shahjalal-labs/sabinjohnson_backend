@@ -1,0 +1,118 @@
+### Login with email
+POST {{baseUrl}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "identity": "user@gmail.com",
+  "password": "Aw32@320",
+  "fcmToken": "optional_fcm_token"
+}
+
+### Login with phone number
+POST {{baseUrl}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "identity": "+8801712345678",
+  "password": "Password123!",
+  "fcmToken": "optional_fcm_token"
+}
+
+### Get my profile (authenticated)
+GET {{baseUrl}}/auth/profile HTTP/1.1
+Authorization: {{authToken}}
+
+### Update user location (authenticated)
+PATCH {{baseUrl}}/auth/update/user-location HTTP/1.1
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+  "latitude": 23.8103,
+  "longitude": 90.4125
+}
+
+### Update rider location (authenticated)
+PATCH {{baseUrl}}/auth/update/rider-location HTTP/1.1
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+  "latitude": 23.8103,
+  "longitude": 90.4125
+}
+
+### Update food deliver location (authenticated)
+PATCH {{baseUrl}}/auth/update/food-deliver-location HTTP/1.1
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+  "latitude": 23.8103,
+  "longitude": 90.4125
+}
+
+### Send forgot password OTP (identity = email or phone)
+POST {{baseUrl}}/auth/send-forget-otp HTTP/1.1
+Content-Type: application/json
+
+{
+  "identity": "user@example.com"
+}
+
+### Verify forgot password OTP
+POST {{baseUrl}}/auth/verify-forget-otp HTTP/1.1
+Content-Type: application/json
+
+{
+  "identity": "user@example.com",
+  "otp": "1234"
+}
+
+### Reset password (requires forgetAuth token from verification)
+PATCH {{baseUrl}}/auth/reset-password HTTP/1.1
+Authorization: {{forgetToken}}
+Content-Type: application/json
+
+{
+  "newPassword": "NewPassword123!"
+}
+
+### Update profile image (authenticated, multipart/form-data)
+PATCH {{baseUrl}}/auth/update/profile-image HTTP/1.1
+Authorization: {{authToken}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="profileImage"; filename="avatar.jpg"
+Content-Type: image/jpeg
+
+< ./avatar.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Update profile (authenticated)
+PATCH {{baseUrl}}/auth/update-profile HTTP/1.1
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+  "fullName": "Updated Name",
+  "email": "newemail@example.com",
+  "phoneNumber": "+8801712345678",
+  "city": "Dhaka",
+  "address": "123 Main Street"
+}
+
+### Change password (authenticated)
+PATCH {{baseUrl}}/auth/change-password HTTP/1.1
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+  "oldPassword": "OldPassword123!",
+  "newPassword": "NewPassword123!"
+}
+
+### Delete account (authenticated)
+DELETE {{baseUrl}}/auth/delete-account HTTP/1.1
+Authorization: {{authToken}}

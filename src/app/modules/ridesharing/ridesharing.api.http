@@ -1,0 +1,96 @@
+### ridesharing.api.http - Test endpoints for the Ridesharing module
+
+### 1. Find nearby riders (User)
+POST {{baseUrl}}/ride-sharing/find-rider
+Authorization: {{user}}
+Content-Type: application/json
+
+{
+  "pickLatitude": 40.7128,
+  "pickLongitude": -74.0060,
+  "pickupAddress": "123 Main St, New York, NY",
+  "destinationLat": 40.7580,
+  "destinationLong": -73.9855,
+  "destinationAddress": "Times Square, New York, NY",
+  "paywith": "Cash",
+  "orderType": "Ridesharing"
+}
+
+### 2. Send ride request to a specific rider (User)
+POST {{baseUrl}}/ride-sharing/send-request
+Authorization: {{user}}
+Content-Type: application/json
+
+{
+  "riderId": "69b12864ef93861f711e2882",
+  "pickupLatitude": 40.7128,
+  "pickupLongitude": -74.0060,
+  "pickupAddress": "123 Main St, New York, NY",
+  "destinationLat": 40.7580,
+  "destinationLong": -73.9855,
+  "destinationAddress": "Times Square, New York, NY",
+  "userDistanceKm": 2.5,
+  "riderDistanceKm": 1.2,
+  "etaMinutes": 10,
+  "cost": 12.50,
+  "payWith": "Cash",
+  "orderType": "Ridesharing"
+}
+
+### 3. Get my ride requests (Rider)
+GET {{baseUrl}}/ride-sharing/my-ride-requests
+Authorization: {{rider}}
+
+### 4. Get current active ride (User)
+GET {{baseUrl}}/ride-sharing/current-ride
+Authorization: {{user}}
+
+### 5. Cancel a ride (User or Rider)
+POST {{baseUrl}}/ride-sharing/cancel-ride/67a1b2c3d4e5f67890abcdef
+Authorization: {{user}}
+Content-Type: application/json
+
+{
+  "cancelReason": "Changed my mind"
+}
+
+### 6. Start a ride (Rider)
+POST {{baseUrl}}/ride-sharing/start-ride/67a1b2c3d4e5f67890abcdef
+Authorization: {{rider}}
+
+### 7. End a ride (Rider)
+POST {{baseUrl}}/ride-sharing/end-ride/67a1b2c3d4e5f67890abcdef
+Authorization: {{rider}}
+
+### 8. Pay with BePay (User)
+POST {{baseUrl}}/ride-sharing/bepay-payment/67a1b2c3d4e5f67890abcdef
+Authorization: {{user}}
+
+### 9. Pay with Cash (User)
+POST {{baseUrl}}/ride-sharing/cash-payment/67a1b2c3d4e5f67890abcdef
+Authorization: {{user}}
+
+### 10. Pay with Card (User)
+POST {{baseUrl}}/ride-sharing/card-payment/67a1b2c3d4e5f67890abcdef
+Authorization: {{user}}
+Content-Type: application/json
+
+{
+  "paymentMethodId": "pm_card_visa"
+}
+
+### 11. Initiate PayPal payment (User)
+POST {{baseUrl}}/ride-sharing/paypal-payment/67a1b2c3d4e5f67890abcdef
+Authorization: {{user}}
+
+### 12. Get ridesharing details by ID (any authenticated user)
+GET {{baseUrl}}/ride-sharing/6a7d5809197b0af260881bf1
+Authorization: {{user}}
+
+### 13. Get my ride history (User)
+GET {{baseUrl}}/ride-sharing/my/ride-history
+Authorization: {{user}}
+
+### 14. Get my wallet history (Rider)
+GET {{baseUrl}}/ride-sharing/my/wallet-history
+Authorization: {{rider}}
