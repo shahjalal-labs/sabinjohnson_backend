@@ -11,6 +11,7 @@ import {
   sendRequestToRider,
   startRide,
 } from "../modules/ridesharing/ridesharing.service";
+import { authService } from "../modules/auth/auth.service";
 
 interface CustomWebSocket extends WebSocket {
   userId?: string;
@@ -52,6 +53,8 @@ export function setupWebSocketServer(server: any) {
           requestData,
           cancelReason,
           isOnline,
+          longitude,
+          latitude,
         } = JSON.parse(message.toString());
 
         switch (type) {
@@ -614,8 +617,18 @@ export function setupWebSocketServer(server: any) {
               const updatedUser = await prisma.user.update({
                 where: { id: userId },
                 data: { isOnline: newOnlineStatus },
-                select: { id: true, isOnline: true }
+                select: { id: true, isOnline: true, role: true }
               });
+
+              if (newOnlineStatus && latitude && longitude) {
+                if (updatedUser.role === "User") {
+                  await authService.userLocationUpdate(userId, { latitude, longitude });
+                } else if (updatedUser.role === "Rider") {
+                  await authService.riderLocationUpdate(userId, { latitude, longitude });
+                } else if (updatedUser.role === "Food_Deliver") {
+                  await authService.foodDeliverLocationUpdate(userId, { latitude, longitude });
+                }
+              }
 
               ws.send(
                 JSON.stringify({
