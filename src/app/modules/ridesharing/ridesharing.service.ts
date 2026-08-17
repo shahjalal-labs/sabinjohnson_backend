@@ -20,7 +20,7 @@ const findRider = async (payload: {
   orderType: OrderType;
   orderId?: string;
 }) => {
-  const radius = 5; // km
+  const radius = 10; // km
   const avgSpeedKmPerHour = 30;
   const avgRatePerKm = 1;
 
