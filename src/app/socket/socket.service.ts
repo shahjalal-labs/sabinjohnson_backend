@@ -143,31 +143,21 @@ export function setupWebSocketServer(server: any) {
 
               const receiverSocket = connectedUsers.get(requestData.riderId);
 
-              if (
-                !receiverSocket ||
-                receiverSocket.readyState !== WebSocket.OPEN
-              ) {
-                return ws.send(
-                  JSON.stringify({
-                    type: "error",
-                    message: "Receiver is not online",
-                  }),
-                );
-              }
-
               const rideRequests = await sendRequestToRider(
                 userId,
                 requestData,
               );
 
-              // send ONLY to receiver
-              receiverSocket.send(
-                JSON.stringify({
-                  type: "ride-requests",
-                  message: "You have a new ride request",
-                  rideRequests,
-                }),
-              );
+              // send ONLY to receiver if online
+              if (receiverSocket && receiverSocket.readyState === WebSocket.OPEN) {
+                receiverSocket.send(
+                  JSON.stringify({
+                    type: "ride-requests",
+                    message: "You have a new ride request",
+                    rideRequests,
+                  }),
+                );
+              }
 
               ws.send(
                 JSON.stringify({
@@ -213,28 +203,18 @@ export function setupWebSocketServer(server: any) {
 
               const receiverSocket = connectedUsers.get(rideInfo.user.id);
 
-              if (
-                !receiverSocket ||
-                receiverSocket.readyState !== WebSocket.OPEN
-              ) {
-                return ws.send(
+              const rideRequests = await approveRequest(userId, rideId);
+
+              // send ONLY to receiver if online
+              if (receiverSocket && receiverSocket.readyState === WebSocket.OPEN) {
+                receiverSocket.send(
                   JSON.stringify({
-                    type: "error",
-                    message: "Receiver is not online",
+                    type: "approved-ride-request",
+                    rideInfo: rideInfo,
+                    message: "Your ride request has been approved",
                   }),
                 );
               }
-
-              const rideRequests = await approveRequest(userId, rideId);
-
-              // send ONLY to receiver
-              receiverSocket.send(
-                JSON.stringify({
-                  type: "approved-ride-request",
-                  rideInfo: rideInfo,
-                  message: "Your ride request has been approved",
-                }),
-              );
 
               ws.send(
                 JSON.stringify({
@@ -284,14 +264,16 @@ export function setupWebSocketServer(server: any) {
 
               if (rideInfo.user.id === userId) {
                 const receiverSocket = connectedUsers.get(rideInfo.rider.id);
-                // send ONLY to receiver
-                receiverSocket?.send(
-                  JSON.stringify({
-                    type: "cancel-ride-request",
-                    message: "User has cancelled the ride request",
-                    rideInfo: rideInfo,
-                  }),
-                );
+                // send ONLY to receiver if online
+                if (receiverSocket && receiverSocket.readyState === WebSocket.OPEN) {
+                  receiverSocket.send(
+                    JSON.stringify({
+                      type: "cancel-ride-request",
+                      message: "User has cancelled the ride request",
+                      rideInfo: rideInfo,
+                    }),
+                  );
+                }
 
                 ws.send(
                   JSON.stringify({
@@ -302,14 +284,16 @@ export function setupWebSocketServer(server: any) {
                 );
               } else {
                 const receiverSocket = connectedUsers.get(rideInfo.user.id);
-                // send ONLY to receiver
-                receiverSocket?.send(
-                  JSON.stringify({
-                    type: "cancel-ride-request",
-                    message: "Rider has cancelled the ride request",
-                    rideInfo: rideInfo,
-                  }),
-                );
+                // send ONLY to receiver if online
+                if (receiverSocket && receiverSocket.readyState === WebSocket.OPEN) {
+                  receiverSocket.send(
+                    JSON.stringify({
+                      type: "cancel-ride-request",
+                      message: "Rider has cancelled the ride request",
+                      rideInfo: rideInfo,
+                    }),
+                  );
+                }
 
                 ws.send(
                   JSON.stringify({
@@ -360,14 +344,16 @@ export function setupWebSocketServer(server: any) {
 
               await startRide(rideId);
 
-              // send ONLY to receiver
-              receiverSocket?.send(
-                JSON.stringify({
-                  type: "start-ride",
-                  message: "Your ride request has been started",
-                  rideInfo: rideInfo,
-                }),
-              );
+              // send ONLY to receiver if online
+              if (receiverSocket && receiverSocket.readyState === WebSocket.OPEN) {
+                receiverSocket.send(
+                  JSON.stringify({
+                    type: "start-ride",
+                    message: "Your ride request has been started",
+                    rideInfo: rideInfo,
+                  }),
+                );
+              }
 
               ws.send(
                 JSON.stringify({
@@ -417,14 +403,16 @@ export function setupWebSocketServer(server: any) {
 
               await endRide(rideId);
 
-              // send ONLY to receiver
-              receiverSocket?.send(
-                JSON.stringify({
-                  type: "end-ride",
-                  message: "Your ride request has been ended",
-                  rideInfo: rideInfo,
-                }),
-              );
+              // send ONLY to receiver if online
+              if (receiverSocket && receiverSocket.readyState === WebSocket.OPEN) {
+                receiverSocket.send(
+                  JSON.stringify({
+                    type: "end-ride",
+                    message: "Your ride request has been ended",
+                    rideInfo: rideInfo,
+                  }),
+                );
+              }
 
               ws.send(
                 JSON.stringify({
@@ -550,13 +538,15 @@ export function setupWebSocketServer(server: any) {
             });
 
             const receiverSocket = connectedUsers.get(receiverId);
-            receiverSocket?.send(
-              JSON.stringify({
-                type: "new-message",
-                receiverId,
-                message: message,
-              }),
-            );
+            if (receiverSocket && receiverSocket.readyState === WebSocket.OPEN) {
+              receiverSocket.send(
+                JSON.stringify({
+                  type: "new-message",
+                  receiverId,
+                  message: message,
+                }),
+              );
+            }
 
             ws.send(
               JSON.stringify({
