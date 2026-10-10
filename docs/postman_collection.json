@@ -1,0 +1,5003 @@
+{
+  "info": {
+    "_postman_id": "f7668bad-3211-430c-84c9-31c5f9205578",
+    "name": "Sabinjohnson",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-10-10T06:32:23.000Z",
+    "updatedAt": "2026-10-10T06:32:23.000Z",
+    "lastUpdatedBy": "48491387",
+    "uid": "48491387-f7668bad-3211-430c-84c9-31c5f9205578"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Create User",
+          "id": "eeca098b-6431-4bd4-a0c9-b16bf4c055dc",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"role\" : \"Rider\",\r\n    \"email\": \"rider4@gmail.com\",\r\n    \"phoneNumber\" : \"+88017627173944\",\r\n    \"fullName\": \"Rider\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/user/create",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "user",
+                "create"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "9bc533ea-4ed7-4f34-8703-db84afd58528",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"role\" : \"User\",\r\n    \"email\": \"ruhulamin.et15@gmail.com\",\r\n    \"phoneNumber\" : \"+8801762717397\",\r\n    \"fullName\": \"Ruhul Amin\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/user/create",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "user",
+                    "create"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "95"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"5f-dETdA2Pcfm5wT+mlfAgDKKndutc\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 04:32:21 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Please verify your phone number with the OTP sent.\",\n    \"result\": \"1655\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-9bc533ea-4ed7-4f34-8703-db84afd58528"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-eeca098b-6431-4bd4-a0c9-b16bf4c055dc"
+        },
+        {
+          "name": "Signup verification by Phone OTP",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "const role = response.result.role;\r",
+                  "const token = response.result.accessToken;\r",
+                  "\r",
+                  "if (role === \"Admin\") {\r",
+                  "    pm.collectionVariables.set(\"adminToken\", token);\r",
+                  "    pm.collectionVariables.set(\"accessToken\", token)\r",
+                  "} \r",
+                  "else if (role === \"User\") {\r",
+                  "    pm.collectionVariables.set(\"userToken\", token);\r",
+                  "    pm.collectionVariables.set(\"accessToken\", token)\r",
+                  "} \r",
+                  "else if (role === \"Rider\") {\r",
+                  "    pm.collectionVariables.set(\"riderToken\", token);\r",
+                  "    pm.collectionVariables.set(\"accessToken\", token)\r",
+                  "} \r",
+                  "else if (role === \"Food_Deliver\") {\r",
+                  "    pm.collectionVariables.set(\"foodDeliverToken\", token);\r",
+                  "    pm.collectionVariables.set(\"accessToken\", token)\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "id": "93660f01-a9e9-449a-92f5-a79554f86fb9"
+              }
+            }
+          ],
+          "id": "f6812687-56df-48e2-99a6-9ab439d2a750",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"phoneNumber\" : \"+88017627173944\",\r\n    \"otp\": \"4113\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/user/signup-verification",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "user",
+                "signup-verification"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "2d6b99fc-80b5-41d0-9814-d57ee2b6c260",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"phoneNumber\" : \"+8801762717390\",\r\n    \"otp\": \"8158\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/user/signup-verification",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "user",
+                    "signup-verification"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "355"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"163-WnyXdr+PgLn2f78DyVT5QDJuXKQ\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 04:48:33 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Phone number verified successfully.\",\n    \"result\": {\n        \"id\": \"69b0f420d20de44d546aed72\",\n        \"role\": \"Admin\",\n        \"accessToken\": \"\"\n    }\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-2d6b99fc-80b5-41d0-9814-d57ee2b6c260"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-f6812687-56df-48e2-99a6-9ab439d2a750"
+        },
+        {
+          "name": "Resend OTP",
+          "id": "faabf64c-1fee-469b-895a-c71a817108d5",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"phoneNumber\" : \"+8801762717397\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/user/resend-otp",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "user",
+                "resend-otp"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "abbf948c-4fa6-42d2-9151-296df8af35c9",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"phoneNumber\" : \"+8801762717397\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/user/resend-otp",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "user",
+                    "resend-otp"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "69"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"45-4yr/3UahnZ4ag/yJ0AVZ1HmsfKI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 04:54:16 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"OTP resent successfully.\",\n    \"result\": \"9887\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-abbf948c-4fa6-42d2-9151-296df8af35c9"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-faabf64c-1fee-469b-895a-c71a817108d5"
+        },
+        {
+          "name": "Set Password",
+          "id": "7bd68aa8-6bd3-4d24-b47e-59bd20221942",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"password\" : \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/user/set-password",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "user",
+                "set-password"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "dec86045-1b8b-4377-a2c6-7813ae291b06",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "",
+                    "value": "",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"password\" : \"123456\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/user/set-password",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "user",
+                    "set-password"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "55"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"37-s6hbT3YFSiBEP5EkdbxMcuFaFAQ\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 05:00:45 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Password set successfully.\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-dec86045-1b8b-4377-a2c6-7813ae291b06"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-7bd68aa8-6bd3-4d24-b47e-59bd20221942"
+        },
+        {
+          "name": "Setup Profile",
+          "id": "68aa35a7-d4ce-4608-be02-9eda414e904f",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "bodyData",
+                  "value": "{\n    \"fullName\" : \"Ruhul Amin\",\n    \"city\" : \"Dhaka\",\n    \"address\" : \"Banasree, Dhaka, Bangladesh\"\n}",
+                  "type": "text",
+                  "uuid": "5182f1dd-773e-4d31-aa81-43b5ddc28294"
+                },
+                {
+                  "key": "profileImage",
+                  "type": "file",
+                  "uuid": "5d05be50-5af9-4bfc-9845-73bfebd239b4",
+                  "src": "/C:/Users/USER/Downloads/ruhulamin (1).jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/user/profile-setup",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "user",
+                "profile-setup"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c3fd62bc-eb1b-453b-a7f2-4ff033e5a0ff",
+              "name": "success",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "bodyData",
+                      "value": "{\n    \"fullName\" : \"Ruhul Amin\",\n    \"city\" : \"Dhaka\",\n    \"address\" : \"Banasree, Dhaka, Bangladesh\"\n}",
+                      "type": "text",
+                      "uuid": "5182f1dd-773e-4d31-aa81-43b5ddc28294"
+                    },
+                    {
+                      "key": "profileImage",
+                      "type": "file",
+                      "uuid": "5d05be50-5af9-4bfc-9845-73bfebd239b4",
+                      "src": [
+                        "/C:/Users/USER/Downloads/ruhulamin (1).jpg"
+                      ]
+                    }
+                  ],
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/user/profile-setup",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "user",
+                    "profile-setup"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "56"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"38-s5/0F8LIEN+FUuz75IvKddKwVNk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 05:20:26 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Profile setup successfully.\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-c3fd62bc-eb1b-453b-a7f2-4ff033e5a0ff"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-68aa35a7-d4ce-4608-be02-9eda414e904f"
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "const role = response.result.role;\r",
+                  "const token = response.result.accessToken;\r",
+                  "\r",
+                  "if (role === \"Admin\") {\r",
+                  "    pm.collectionVariables.set(\"adminToken\", token);\r",
+                  "    pm.collectionVariables.set(\"accessToken\", token)\r",
+                  "} \r",
+                  "else if (role === \"User\") {\r",
+                  "    pm.collectionVariables.set(\"userToken\", token);\r",
+                  "    pm.collectionVariables.set(\"accessToken\", token)\r",
+                  "} \r",
+                  "else if (role === \"Rider\") {\r",
+                  "    pm.collectionVariables.set(\"riderToken\", token);\r",
+                  "    pm.collectionVariables.set(\"accessToken\", token)\r",
+                  "} \r",
+                  "else if (role === \"Food_Deliver\") {\r",
+                  "    pm.collectionVariables.set(\"foodDeliverToken\", token);\r",
+                  "    pm.collectionVariables.set(\"accessToken\", token)\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "id": "2502e06a-1235-477d-8c44-ec39db1e4a0f"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "id": "b225e8db-c6a4-408a-940d-c4f53f640792"
+              }
+            }
+          ],
+          "id": "48f99a2d-ca02-4ccb-81eb-4e826c61a951",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identity\": \"+88017627173944\",\r\n    \"password\": \"123456\",\r\n    \"fcmToken\": \"cuCi4xDsTByDpoa1fs7xnj:APA91bFP2kNQNSkahVowPNjBk6ytu0lZT9VwKMcF9lJ3aIbMkjRyt7I7AutU1595aCiWTqR-_1KgJfIvIKmgS5XIrU-Slqd43HHeImjde8FKR3jkKZcPkRg\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/login",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "2d415411-e6da-4ec4-9ed7-383d397eeb2b",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"identity\": \"+8801762717397\",\r\n    \"password\": \"123456\",\r\n    \"fcmToken\": \"cuCi4xDsTByDpoa1fs7xnj:APA91bFP2kNQNSkahVowPNjBk6ytu0lZT9VwKMcF9lJ3aIbMkjRyt7I7AutU1595aCiWTqR-_1KgJfIvIKmgS5XIrU-Slqd43HHeImjde8FKR3jkKZcPkRg\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/auth/login",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "342"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"156-qhi3sZd6pfJ9f7v+SZ/IftzKKyY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 05:46:20 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Login successful\",\n    \"result\": {\n        \"id\": \"69b0f598fa3db60e702c2981\",\n        \"accessToken\": \"\",\n        \"role\": \"User\"\n    }\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-2d415411-e6da-4ec4-9ed7-383d397eeb2b"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-48f99a2d-ca02-4ccb-81eb-4e826c61a951"
+        },
+        {
+          "name": "Send Forget OTP",
+          "id": "82c26820-a5bd-449b-9559-81f9d98efdad",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identity\" : \"user@gmail.com\"\r\n    // \"identity\" : \"+8801762717397\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/send-forget-otp",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "send-forget-otp"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "cb95abec-4685-4299-bfdd-1fa0e74a48f0",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"identity\" : \"user@gmail.com\"\r\n    // \"identity\" : \"+8801762717397\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/auth/send-forget-otp",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "send-forget-otp"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "66"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"42-Y3oF332KPtKOyzgn+I5WD8V/CKk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 06:03:05 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"OTP send successfully\",\n    \"result\": \"9255\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-cb95abec-4685-4299-bfdd-1fa0e74a48f0"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-82c26820-a5bd-449b-9559-81f9d98efdad"
+        },
+        {
+          "name": "Verify Forget Password OTP",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "pm.collectionVariables.set(\"forgetToken\", response.result.forgetToken);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "id": "d5e5bd2b-c1c5-4d55-bf5f-d4b75a8606c5"
+              }
+            }
+          ],
+          "id": "1d52abe1-7408-4f52-a5a0-8536bc890864",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"identity\" : \"user@gmail.com\",\r\n    \"otp\" : \"3857\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/verify-forget-otp",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "verify-forget-otp"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "65d6d2d6-7071-4a12-981b-eb3185ac45d3",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"identity\" : \"user@gmail.com\",\r\n    \"otp\" : \"3857\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/auth/verify-forget-otp",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "verify-forget-otp"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "254"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"fe-7udzOmIHzJHGAo1TIPD7itXqWjI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 06:10:05 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"OTP verified successfully.\",\n    \"result\": {\n        \"forgetToken\": \"\"\n    }\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-65d6d2d6-7071-4a12-981b-eb3185ac45d3"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-1d52abe1-7408-4f52-a5a0-8536bc890864"
+        },
+        {
+          "name": "Reset Password",
+          "id": "b426344e-d0ae-435d-b0ef-d25e5e29d147",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{forgetToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"newPassword\": \"12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/reset-password",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "eb3a4d55-6f36-4ce3-9e61-186cb9c5ecdb",
+              "name": "success",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"newPassword\": \"12345678\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/auth/reset-password",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "reset-password"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "59"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3b-X7FqM/II6iSph1aCaNn8nkocPuU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 06:14:37 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Password updated successfully.\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-eb3a4d55-6f36-4ce3-9e61-186cb9c5ecdb"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-b426344e-d0ae-435d-b0ef-d25e5e29d147"
+        },
+        {
+          "name": "Update Profile Image",
+          "id": "3678a00f-095a-4014-ae81-4597aabfe453",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "profileImage",
+                  "type": "file",
+                  "uuid": "84830020-0fd8-46f5-a471-7f768de537e6",
+                  "src": "/C:/Users/USER/Downloads/ruhulamin (1).jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/update/profile-image",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "update",
+                "profile-image"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "56a4bd37-184c-44a0-9bba-3c3a35d79fe8",
+              "name": "success",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "profileImage",
+                      "type": "file",
+                      "uuid": "84830020-0fd8-46f5-a471-7f768de537e6",
+                      "src": [
+                        "/C:/Users/USER/Downloads/ruhulamin (1).jpg"
+                      ]
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseURL}}/auth/update/profile-image",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "update",
+                    "profile-image"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "64"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"40-91DiTAiT7ZUcgOSGfMenlVTl8Eg\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 06:21:21 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Profile image updated successfully.\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-56a4bd37-184c-44a0-9bba-3c3a35d79fe8"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-3678a00f-095a-4014-ae81-4597aabfe453"
+        },
+        {
+          "name": "Update Profile",
+          "id": "6633d720-5d92-4ed9-a53a-c6c0828139a9",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"fullName\" : \"Ruhul Amin\",\r\n    \"email\" : \"user@gmail.com\",\r\n    \"phoneNumber\" : \"+8801762717397\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/update-profile",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "update-profile"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "67dd83a2-48d0-4a6a-9c73-1e6a79edfa5b",
+              "name": "success",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullName\" : \"Ruhul Amin\",\r\n    \"city\" : \"Rangpur\",\r\n    \"email\" : \"user@gmail.com\",\r\n    \"phoneNumber\" : \"+8801762717397\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/auth/update-profile",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "update-profile"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "71"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"47-/6uAYAaqn/JYYK2KAivFjxjo+7Y\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 06:27:06 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Your profile has been updated successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-67dd83a2-48d0-4a6a-9c73-1e6a79edfa5b"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-6633d720-5d92-4ed9-a53a-c6c0828139a9"
+        },
+        {
+          "name": "Change Password",
+          "id": "a34ccf4d-832e-4d86-b3c6-dfc2f79602b1",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"oldPassword\": \"12345678\",\r\n    \"newPassword\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/change-password",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "change-password"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f5dde704-2d0e-4b7f-bac2-fef6c2fe2937",
+              "name": "success",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"oldPassword\": \"12345678\",\r\n    \"newPassword\": \"123456\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/auth/change-password",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "change-password"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "72"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"48-gkb8nXcjhUF7xxn7zgopIXYos/g\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 06:28:51 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Your password has been updated successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-f5dde704-2d0e-4b7f-bac2-fef6c2fe2937"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-a34ccf4d-832e-4d86-b3c6-dfc2f79602b1"
+        },
+        {
+          "name": "My Profile",
+          "id": "057397c1-def5-4a37-853a-8e05e612a1f4",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/auth/profile",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "profile"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f1496f55-053e-429c-b72d-3a49e75aa82a",
+              "name": "success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/auth/profile",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "profile"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "359"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"167-WJEle0e117kfAzR4Ik8lMZcVeyw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 06:31:21 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Your profile has been retrieved successfully\",\n    \"result\": {\n        \"id\": \"69b0f598fa3db60e702c2981\",\n        \"email\": \"user@gmail.com\",\n        \"phoneNumber\": \"+8801762717397\",\n        \"fullName\": \"Ruhul Amin\",\n        \"address\": \"Banasree, Dhaka, Bangladesh\",\n        \"city\": \"Rangpur\",\n        \"profileImage\": \"https://api.zenexcloud.com/emdadullah/uploads/profileImages/1773210079584-ticlc9ooas.jpg\"\n    }\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-f1496f55-053e-429c-b72d-3a49e75aa82a"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-057397c1-def5-4a37-853a-8e05e612a1f4"
+        },
+        {
+          "name": "Enable/Update Location | User",
+          "id": "3d2ec8b4-63da-4a92-9137-832541c4d016",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"latitude\" : 23.76,\r\n    \"longitude\" : 90.43\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/update/user-location",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "update",
+                "user-location"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "8a5d6570-3a7c-42f4-bbaa-f5a6a66f3546",
+              "name": "success",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"latitude\" : 23.76,\r\n    \"longitude\" : 90.43\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/auth/update/user-location",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "update",
+                    "user-location"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "63"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3f-T8Se7XOhSjoCf3kmfhcSb2TCJaI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 07:58:14 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Your location updated successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-8a5d6570-3a7c-42f4-bbaa-f5a6a66f3546"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-3d2ec8b4-63da-4a92-9137-832541c4d016"
+        },
+        {
+          "name": "Enable/Update Location | Rider",
+          "id": "8b7ad271-14ea-4f41-8cca-fdbfc374e031",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{riderToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"latitude\": 37.785834,\r\n    \"longitude\": -122.406417\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/update/rider-location",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "update",
+                "rider-location"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "25eb6007-9ed9-4acd-9346-6446d8d272bd",
+              "name": "success",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"latitude\" : 23.76,\r\n    \"longitude\" : 90.43\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/auth/update/rider-location",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "update",
+                    "rider-location"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "63"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3f-T8Se7XOhSjoCf3kmfhcSb2TCJaI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 08:32:32 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Your location updated successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-25eb6007-9ed9-4acd-9346-6446d8d272bd"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-8b7ad271-14ea-4f41-8cca-fdbfc374e031"
+        },
+        {
+          "name": "Enable/Update Location | Food Deliver",
+          "id": "fb7a1b5b-7fe4-4d5e-8356-8f2431bc6e28",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{foodDeliverToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"latitude\" : 23.76,\r\n    \"longitude\" : 90.43\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/update/food-deliver-location",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "auth",
+                "update",
+                "food-deliver-location"
+              ]
+            }
+          },
+          "response": [],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-fb7a1b5b-7fe4-4d5e-8356-8f2431bc6e28"
+        }
+      ],
+      "id": "68437d11-d4ee-400e-a315-d0e015849069",
+      "createdAt": "2026-10-10T06:32:23.000Z",
+      "updatedAt": "2026-10-10T06:32:23.000Z",
+      "uid": "48491387-68437d11-d4ee-400e-a315-d0e015849069"
+    },
+    {
+      "name": "Vehicle",
+      "item": [
+        {
+          "name": "Create Vehicle",
+          "id": "ecab4a65-3bd5-4b5e-8df7-ddf895a8e9cc",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{riderToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "bodyData",
+                  "value": "{\n    \"vehicleName\" : \"Toto\",\n    \"model\" : \"test\",\n    \"licensePlate\" : \"6546545645\"\n}",
+                  "type": "text",
+                  "uuid": "60130f4a-01b2-48da-ada5-0ecdf4f7e3b7"
+                },
+                {
+                  "key": "vehicleImage",
+                  "type": "file",
+                  "uuid": "73912da4-5ce0-42b7-9ed8-2dd594f7597a",
+                  "src": "/C:/Users/USER/Downloads/Rectangle 34625367.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/vehicle/create",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "vehicle",
+                "create"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "8feeaaa8-3d38-4180-bfd5-c5ff4abf9e36",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "bodyData",
+                      "value": "{\n    \"vehicleName\" : \"Toto\",\n    \"model\" : \"test\",\n    \"licensePlate\" : \"6546545645\"\n}",
+                      "type": "text",
+                      "uuid": "60130f4a-01b2-48da-ada5-0ecdf4f7e3b7"
+                    },
+                    {
+                      "key": "vehicleImage",
+                      "type": "file",
+                      "uuid": "73912da4-5ce0-42b7-9ed8-2dd594f7597a",
+                      "src": [
+                        "/C:/Users/USER/Downloads/Rectangle 34625367.png"
+                      ]
+                    }
+                  ],
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/vehicle/create",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "vehicle",
+                    "create"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "70"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"46-Ln1aYSW1PxtUa6Ee7NtZOEedbZ4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 07:15:37 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"The vehicle has been created successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-8feeaaa8-3d38-4180-bfd5-c5ff4abf9e36"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-ecab4a65-3bd5-4b5e-8df7-ddf895a8e9cc"
+        },
+        {
+          "name": "Update Vehicle Info",
+          "id": "274e55be-98de-428b-b9ec-b1f22eb778ea",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{riderToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "idFrontImage",
+                  "type": "file",
+                  "uuid": "525051f9-f378-47a5-9ccd-b74d5f000a6b",
+                  "src": "/C:/Users/USER/Downloads/Rectangle 34625355.png"
+                },
+                {
+                  "key": "idBackImage",
+                  "type": "file",
+                  "uuid": "828a3440-1ec8-4550-af04-3214a06aa85c",
+                  "src": "/C:/Users/USER/Downloads/Rectangle 34625355.png"
+                },
+                {
+                  "key": "licenseFrontImage",
+                  "type": "file",
+                  "uuid": "35040b76-857d-4b19-872c-71df0e02d524",
+                  "src": "/C:/Users/USER/Downloads/Rectangle 34625355.png"
+                },
+                {
+                  "key": "licenseBackImage",
+                  "type": "file",
+                  "uuid": "3ef16051-642a-4dc0-b706-36fa60e8e1ca",
+                  "src": "/C:/Users/USER/Downloads/Rectangle 34625355.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/vehicle/update",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "vehicle",
+                "update"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "bebee354-11c1-43a4-ba17-b64e7917271e",
+              "name": "success",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "idFrontImage",
+                      "type": "file",
+                      "uuid": "525051f9-f378-47a5-9ccd-b74d5f000a6b",
+                      "src": [
+                        "/C:/Users/USER/Downloads/Rectangle 34625355.png"
+                      ]
+                    },
+                    {
+                      "key": "idBackImage",
+                      "type": "file",
+                      "uuid": "828a3440-1ec8-4550-af04-3214a06aa85c",
+                      "src": [
+                        "/C:/Users/USER/Downloads/Rectangle 34625355.png"
+                      ]
+                    },
+                    {
+                      "key": "licenseFrontImage",
+                      "type": "file",
+                      "uuid": "35040b76-857d-4b19-872c-71df0e02d524",
+                      "src": [
+                        "/C:/Users/USER/Downloads/Rectangle 34625355.png"
+                      ]
+                    },
+                    {
+                      "key": "licenseBackImage",
+                      "type": "file",
+                      "uuid": "3ef16051-642a-4dc0-b706-36fa60e8e1ca",
+                      "src": [
+                        "/C:/Users/USER/Downloads/Rectangle 34625355.png"
+                      ]
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseURL}}/vehicle/update",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "vehicle",
+                    "update"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "66"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"42-Ce0C4GAtGtnjjMdWuBIZZnKs+OE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 11 Mar 2026 07:51:50 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"vehicle has been updated successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-bebee354-11c1-43a4-ba17-b64e7917271e"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-274e55be-98de-428b-b9ec-b1f22eb778ea"
+        }
+      ],
+      "id": "aaabdfb3-31a2-47f6-8a04-96c604bbbc3f",
+      "createdAt": "2026-10-10T06:32:23.000Z",
+      "updatedAt": "2026-10-10T06:32:23.000Z",
+      "uid": "48491387-aaabdfb3-31a2-47f6-8a04-96c604bbbc3f"
+    },
+    {
+      "name": "Ride Sharing",
+      "item": [
+        {
+          "name": "Find Driver | User",
+          "id": "9acc48a6-3efa-4757-9a3c-e8aeff8ead6b",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"pickLatitude\": 23.76,\r\n    \"pickLongitude\": 90.43,\r\n    \"pickupAddress\": \"Banasree, Dhaka\",\r\n    \"destinationLat\": 23.75627295273975,\r\n    \"destinationLong\": 90.41426818929281,\r\n    \"destinationAddress\": \"Karwan Bazar, Dhaka\",\r\n    \"paywith\": \"Cash\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/ride-sharing/find-rider",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "ride-sharing",
+                "find-rider"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "bf23e432-f43a-4273-a9a8-0ec0c298790b",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"pickLatitude\": 23.76,\r\n    \"pickLongitude\": 90.43,\r\n    \"pickupAddress\": \"Banasree, Dhaka\",\r\n    \"destinationLat\": 23.75627295273975,\r\n    \"destinationLong\": 90.41426818929281,\r\n    \"destinationAddress\": \"Karwan Bazar, Dhaka\",\r\n    \"paywith\": \"Cash\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/ride-sharing/find-rider",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "ride-sharing",
+                    "find-rider"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "514"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"202-W5gOoDUCF2KqC9TLhlEPsyfB0NY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sat, 14 Mar 2026 02:22:06 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Riders has been found successfully\",\n    \"result\": [\n        {\n            \"riderInfo\": {\n                \"id\": \"69b12864ef93861f711e2882\",\n                \"fullName\": \"Rider\",\n                \"avgRating\": 4.5,\n                \"phoneNumber\": \"+8801762717391\"\n            },\n            \"vehicleInfo\": {\n                \"vehicleName\": \"Toto\"\n            },\n            \"rideInfo\": {\n                \"riderDistanceKm\": 0,\n                \"tripDistanceKm\": 1.65,\n                \"etaMinutes\": 4,\n                \"estimatedFare\": 1.65,\n                \"payWith\": \"Cash\"\n            },\n            \"pickup\": {\n                \"latitude\": 23.76,\n                \"longitude\": 90.43,\n                \"address\": \"Banasree, Dhaka\"\n            },\n            \"destination\": {\n                \"latitude\": 23.75627295273975,\n                \"longitude\": 90.41426818929281,\n                \"address\": \"Karwan Bazar, Dhaka\"\n            }\n        }\n    ]\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-bf23e432-f43a-4273-a9a8-0ec0c298790b"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-9acc48a6-3efa-4757-9a3c-e8aeff8ead6b"
+        },
+        {
+          "name": "My Ride Requests | Rider",
+          "id": "31038e27-9af3-426a-81e6-20fa0b3104a4",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{riderToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/ride-sharing/my-ride-requests",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "ride-sharing",
+                "my-ride-requests"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "4cbf59b3-fb43-48b1-9f9a-091001e2680c",
+              "name": "My Ride Requests | Rider",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/ride-sharing/my-ride-requests",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "ride-sharing",
+                    "my-ride-requests"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "631"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"277-D/QQnJUTL5o6Yc1oPqbMZ1oVSK4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 13 Aug 2026 05:51:40 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"My ride requests have been retrieved successfully\",\n    \"result\": [\n        {\n            \"id\": \"6a7d5809197b0af260881bf1\",\n            \"user\": {\n                \"id\": \"69b0f598fa3db60e702c2981\",\n                \"fullName\": \"Ruhul Amin\",\n                \"phoneNumber\": \"+8801762717397\"\n            },\n            \"rider\": {\n                \"id\": \"69b12864ef93861f711e2882\",\n                \"fullName\": \"Rider\",\n                \"phoneNumber\": \"+8801762717391\"\n            },\n            \"pickupAddress\": \"123 Main St, New York, NY\",\n            \"pickupLatitude\": 40.7128,\n            \"pickupLongitude\": -74.006,\n            \"destinationAddress\": \"Times Square, New York, NY\",\n            \"destinationLat\": 40.758,\n            \"destinationLong\": -73.9855,\n            \"etaMinutes\": 10,\n            \"userDistanceKm\": 2.5,\n            \"cost\": 12.5,\n            \"payWith\": \"Cash\",\n            \"createdAt\": \"2026-08-13T05:37:13.699Z\",\n            \"status\": \"Pending\"\n        }\n    ]\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-4cbf59b3-fb43-48b1-9f9a-091001e2680c"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-31038e27-9af3-426a-81e6-20fa0b3104a4"
+        },
+        {
+          "name": "Ride Details",
+          "id": "9011a5f7-2a8c-4f62-bf43-79cc9bf60a2a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/ride-sharing/:rideId",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "ride-sharing",
+                ":rideId"
+              ],
+              "variable": [
+                {
+                  "id": "d1058d29-5b07-4076-b227-9637b9672017",
+                  "key": "rideId",
+                  "value": "6a7d5809197b0af260881bf1"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "d3865a51-23ea-4953-8a98-ad3c37a371a6",
+              "name": "Ride Details",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/ride-sharing/:rideId",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "ride-sharing",
+                    ":rideId"
+                  ],
+                  "variable": [
+                    {
+                      "key": "rideId",
+                      "value": "6a7d5809197b0af260881bf1"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "601"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"259-QAyxbXr2PLfk8NbrgZ3Z80ous5E\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 13 Aug 2026 05:53:26 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"ridesharing has been retrived successfully\",\n    \"result\": {\n        \"id\": \"6a7d5809197b0af260881bf1\",\n        \"status\": \"Pending\",\n        \"user\": {\n            \"id\": \"69b0f598fa3db60e702c2981\",\n            \"fullName\": \"Ruhul Amin\",\n            \"phoneNumber\": \"+8801762717397\"\n        },\n        \"rider\": {\n            \"id\": \"69b12864ef93861f711e2882\",\n            \"fullName\": \"Rider\",\n            \"phoneNumber\": \"+8801762717391\"\n        },\n        \"pickupLatitude\": 40.7128,\n        \"pickupLongitude\": -74.006,\n        \"pickupAddress\": \"123 Main St, New York, NY\",\n        \"destinationLat\": 40.758,\n        \"destinationLong\": -73.9855,\n        \"destinationAddress\": \"Times Square, New York, NY\",\n        \"etaMinutes\": 10,\n        \"cost\": 12.5,\n        \"payWith\": \"Cash\",\n        \"createdAt\": \"2026-08-13T05:37:13.699Z\"\n    }\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-d3865a51-23ea-4953-8a98-ad3c37a371a6"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-9011a5f7-2a8c-4f62-bf43-79cc9bf60a2a"
+        },
+        {
+          "name": "Current Ride Info | User",
+          "id": "12bdcec7-5a9b-4556-90bb-a820142c18d6",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/ride-sharing/current-ride",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "ride-sharing",
+                "current-ride"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c6e9cf2a-5907-443c-8886-189b8d1820ea",
+              "name": "success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/ride-sharing/current-ride",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "ride-sharing",
+                    "current-ride"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "390"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"186-imWbT7dUrFJh8XLQVB33J+rIBzs\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 12 Mar 2026 03:28:32 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Current ride has been retrieved successfully\",\n    \"result\": {\n        \"id\": \"69b229b751c57da573e34103\",\n        \"rider\": {\n            \"id\": \"69b12864ef93861f711e2882\",\n            \"fullName\": \"Rider\",\n            \"phoneNumber\": \"+8801762717391\"\n        },\n        \"pickupAddress\": \"Banasree, Dhaka\",\n        \"destinationAddress\": \"Karwan Bazar, Dhaka\",\n        \"etaMinutes\": 18,\n        \"cost\": 320.5,\n        \"payWith\": \"cash\",\n        \"createdAt\": \"2026-03-12T02:49:27.045Z\",\n        \"status\": \"Accepted\"\n    }\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-c6e9cf2a-5907-443c-8886-189b8d1820ea"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-12bdcec7-5a9b-4556-90bb-a820142c18d6"
+        },
+        {
+          "name": "Create Payment Method ID | Credit Card",
+          "id": "0092de80-5006-4ff9-b48a-d985a10ecccf",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "pk_test_51QFZCpFQDM8OhwJHixf9ycw8YpyK6vuUNMWzfuWcIgEFTlP4fKMkBaAfrLFWQkEMqV52OfveaDDY1aAzMixFduVz00RO52Ez8L",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "card[number]",
+                  "value": "4242424242424242",
+                  "type": "text",
+                  "uuid": "df849175-7a50-4cb9-ab9f-412370f4036f"
+                },
+                {
+                  "key": "card[exp_month]",
+                  "value": "12",
+                  "type": "text",
+                  "uuid": "e7991628-fe80-452c-a110-6a0606e29000"
+                },
+                {
+                  "key": "card[exp_year]",
+                  "value": "26",
+                  "type": "text",
+                  "uuid": "18d020e5-3313-48bf-a8b7-bdff30ddea3f"
+                },
+                {
+                  "key": "card[cvc]",
+                  "value": "111",
+                  "type": "text",
+                  "uuid": "422fac9d-544e-4121-b44e-0ec0be3e1c45"
+                },
+                {
+                  "key": "type",
+                  "value": "card",
+                  "type": "text",
+                  "uuid": "1ae643d2-8cc5-4652-918c-9f8a8214da5f"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://api.stripe.com/v1/payment_methods",
+              "protocol": "https",
+              "host": [
+                "api",
+                "stripe",
+                "com"
+              ],
+              "path": [
+                "v1",
+                "payment_methods"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a7291853-a7f1-4323-b980-568096886796",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "card[number]",
+                      "value": "4242424242424242",
+                      "type": "text",
+                      "uuid": "df849175-7a50-4cb9-ab9f-412370f4036f"
+                    },
+                    {
+                      "key": "card[exp_month]",
+                      "value": "12",
+                      "type": "text",
+                      "uuid": "e7991628-fe80-452c-a110-6a0606e29000"
+                    },
+                    {
+                      "key": "card[exp_year]",
+                      "value": "26",
+                      "type": "text",
+                      "uuid": "18d020e5-3313-48bf-a8b7-bdff30ddea3f"
+                    },
+                    {
+                      "key": "card[cvc]",
+                      "value": "111",
+                      "type": "text",
+                      "uuid": "422fac9d-544e-4121-b44e-0ec0be3e1c45"
+                    },
+                    {
+                      "key": "type",
+                      "value": "card",
+                      "type": "text",
+                      "uuid": "1ae643d2-8cc5-4652-918c-9f8a8214da5f"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "https://api.stripe.com/v1/payment_methods",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "stripe",
+                    "com"
+                  ],
+                  "path": [
+                    "v1",
+                    "payment_methods"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "nginx"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 30 Mar 2026 06:31:53 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1019"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET, HEAD, PUT, PATCH, POST, DELETE"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Expose-Headers",
+                  "value": "Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required"
+                },
+                {
+                  "key": "Access-Control-Max-Age",
+                  "value": "300"
+                },
+                {
+                  "key": "Cache-Control",
+                  "value": "no-cache, no-store"
+                },
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Ry0pxehmb6VxifOfkIPawJkCZSHI4A4561E0BB03vaiIdv5X5lUvHNFL1Q8mlJSeLFFP3WN9_gtajRb_"
+                },
+                {
+                  "key": "Idempotency-Key",
+                  "value": "562b7911-a03d-410b-afcb-c0ac7f991e0b"
+                },
+                {
+                  "key": "Original-Request",
+                  "value": "req_AGBdFoxjJv7Zox"
+                },
+                {
+                  "key": "Request-Id",
+                  "value": "req_AGBdFoxjJv7Zox"
+                },
+                {
+                  "key": "Stripe-Should-Retry",
+                  "value": "false"
+                },
+                {
+                  "key": "Stripe-Version",
+                  "value": "2025-11-17.clover"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "X-Stripe-Priority-Routing-Enabled",
+                  "value": "true"
+                },
+                {
+                  "key": "X-Stripe-Routing-Context-Priority-Tier",
+                  "value": "api-testmode"
+                },
+                {
+                  "key": "X-Wc",
+                  "value": "ABGHIJ"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=63072000; includeSubDomains; preload"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"id\": \"pm_1TGZMbFQDM8OhwJHKMdOAivU\",\n    \"object\": \"payment_method\",\n    \"allow_redisplay\": \"unspecified\",\n    \"billing_details\": {\n        \"address\": {\n            \"city\": null,\n            \"country\": null,\n            \"line1\": null,\n            \"line2\": null,\n            \"postal_code\": null,\n            \"state\": null\n        },\n        \"email\": null,\n        \"name\": null,\n        \"phone\": null,\n        \"tax_id\": null\n    },\n    \"card\": {\n        \"brand\": \"visa\",\n        \"checks\": {\n            \"address_line1_check\": null,\n            \"address_postal_code_check\": null,\n            \"cvc_check\": null\n        },\n        \"country\": \"US\",\n        \"display_brand\": \"visa\",\n        \"exp_month\": 12,\n        \"exp_year\": 2026,\n        \"funding\": \"credit\",\n        \"generated_from\": null,\n        \"last4\": \"4242\",\n        \"networks\": {\n            \"available\": [\n                \"visa\"\n            ],\n            \"preferred\": null\n        },\n        \"regulated_status\": \"unregulated\",\n        \"three_d_secure_usage\": {\n            \"supported\": true\n        },\n        \"wallet\": null\n    },\n    \"created\": 1774852313,\n    \"customer\": null,\n    \"customer_account\": null,\n    \"livemode\": false,\n    \"type\": \"card\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-a7291853-a7f1-4323-b980-568096886796"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-0092de80-5006-4ff9-b48a-d985a10ecccf"
+        },
+        {
+          "name": "Cash Payment | User",
+          "id": "71331e47-2315-40b1-b54b-c375eda09d1e",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/ride-sharing/cash-payment/:rideId",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "ride-sharing",
+                "cash-payment",
+                ":rideId"
+              ],
+              "variable": [
+                {
+                  "id": "c00faff4-07bf-4c6e-87b3-8878da14e57a",
+                  "key": "rideId",
+                  "value": "69b4f02c72979fd98b1517ad"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "63f6338b-338a-4e03-b765-cef77446710a",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/ride-sharing/cash-payment/:rideId",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "ride-sharing",
+                    "cash-payment",
+                    ":rideId"
+                  ],
+                  "variable": [
+                    {
+                      "key": "rideId",
+                      "value": "69b4f02c72979fd98b1517ad"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "73"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"49-QK+aIFbJ9Snv7Ng7TAaKaUsLNkk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 30 Mar 2026 02:46:54 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Cash payment has been processed successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-63f6338b-338a-4e03-b765-cef77446710a"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-71331e47-2315-40b1-b54b-c375eda09d1e"
+        },
+        {
+          "name": "Card Payment | User",
+          "id": "667e9985-1499-42cf-8687-3a255dc16316",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"paymentMethodId\" : \"pm_1TGZMbFQDM8OhwJHKMdOAivU\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/ride-sharing/card-payment/:rideId",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "ride-sharing",
+                "card-payment",
+                ":rideId"
+              ],
+              "variable": [
+                {
+                  "id": "6e2ade71-15ac-4e19-904d-715941bc4258",
+                  "key": "rideId",
+                  "value": "69b4f02c72979fd98b1517ad"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "928f9da4-081e-40b0-b8b9-bee8b72c5258",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/ride-sharing/card-payment/:rideId",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "ride-sharing",
+                    "card-payment",
+                    ":rideId"
+                  ],
+                  "variable": [
+                    {
+                      "key": "rideId",
+                      "value": "69b4f02c72979fd98b1517ad"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "73"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"49-HSTQi8KAPvaV3N2NGjX8o4PkADc\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 30 Mar 2026 02:54:57 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Card payment has been processed successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-928f9da4-081e-40b0-b8b9-bee8b72c5258"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-667e9985-1499-42cf-8687-3a255dc16316"
+        },
+        {
+          "name": "Paypal Payment | User",
+          "id": "dac320e9-ae8f-4335-9f7c-22984a969ac5",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/ride-sharing/paypal-payment/:rideId",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "ride-sharing",
+                "paypal-payment",
+                ":rideId"
+              ],
+              "variable": [
+                {
+                  "id": "7bbee67c-d669-4a8c-879a-b55c56a22d29",
+                  "key": "rideId",
+                  "value": "69b4f02c72979fd98b1517ad"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "77d41eb4-f8a7-4670-a657-ab5750db8df2",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/ride-sharing/paypal-payment/:rideId",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "ride-sharing",
+                    "paypal-payment",
+                    ":rideId"
+                  ],
+                  "variable": [
+                    {
+                      "key": "rideId",
+                      "value": "69b4f02c72979fd98b1517ad"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "169"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"a9-ugkf7EJisgB/vmqLIz+Z1rdM2Hg\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 30 Mar 2026 08:03:07 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"PayPal payment has been processed successfully\",\n    \"result\": {\n        \"checkoutUrl\": \"https://www.sandbox.paypal.com/checkoutnow?token=3YG68523A02254222\"\n    }\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-77d41eb4-f8a7-4670-a657-ab5750db8df2"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-dac320e9-ae8f-4335-9f7c-22984a969ac5"
+        },
+        {
+          "name": "Bepay Payment | User",
+          "id": "a5265412-5655-4e65-97ed-8c90fd368379",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/ride-sharing/bepay-payment/:rideId",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "ride-sharing",
+                "bepay-payment",
+                ":rideId"
+              ],
+              "variable": [
+                {
+                  "id": "50095c33-372f-4736-9d08-6e0836c054d9",
+                  "key": "rideId",
+                  "value": "69b4f02c72979fd98b1517ad"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1af1756a-aedd-43f6-adfb-f2dfad3151e6",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/ride-sharing/bepay-payment/:rideId",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "ride-sharing",
+                    "bepay-payment",
+                    ":rideId"
+                  ],
+                  "variable": [
+                    {
+                      "key": "rideId",
+                      "value": "69b4f02c72979fd98b1517ad"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "74"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4a-Z8HClacp83gG4f35b9P8+f9nMSE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 30 Mar 2026 02:56:10 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"BePay payment has been processed successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-1af1756a-aedd-43f6-adfb-f2dfad3151e6"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-a5265412-5655-4e65-97ed-8c90fd368379"
+        },
+        {
+          "name": "Ride History | User",
+          "id": "00ec639f-957c-4212-b9dd-0e66094a8f28",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/ride-sharing/my/ride-history",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "ride-sharing",
+                "my",
+                "ride-history"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "47a51235-10bd-4b6b-927e-f17fc08e579f",
+              "name": "success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/ride-sharing/my/ride-history",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "ride-sharing",
+                    "my",
+                    "ride-history"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "428"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1ac-nFFCCJNCgeCi5G7OC00th6yJx7I\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 30 Mar 2026 02:46:25 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"My ride history has been retrieved successfully\",\n    \"result\": [\n        {\n            \"id\": \"69b4f02c72979fd98b1517ad\",\n            \"rider\": {\n                \"id\": \"69b12864ef93861f711e2882\",\n                \"fullName\": \"Rider\",\n                \"profileImage\": null,\n                \"averageRating\": 3.5\n            },\n            \"pickupAddress\": \"Banasree, Dhaka\",\n            \"destinationAddress\": \"Karwan Bazar, Dhaka\",\n            \"cost\": 320.5,\n            \"payWith\": \"cash\",\n            \"status\": \"Completed\",\n            \"createdAt\": \"2026-03-14T05:20:44.851Z\",\n            \"updatedAt\": \"2026-03-14T05:21:01.924Z\"\n        }\n    ]\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-47a51235-10bd-4b6b-927e-f17fc08e579f"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-00ec639f-957c-4212-b9dd-0e66094a8f28"
+        }
+      ],
+      "id": "78fa5e20-19b9-4859-b318-6919e61a55f2",
+      "createdAt": "2026-10-10T06:32:23.000Z",
+      "updatedAt": "2026-10-10T06:32:23.000Z",
+      "uid": "48491387-78fa5e20-19b9-4859-b318-6919e61a55f2"
+    },
+    {
+      "name": "Rating",
+      "item": [
+        {
+          "name": "Create Rating",
+          "id": "eabf260d-57d2-4801-8216-1091fac7bfe7",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rideId\" : \"69b4f02c72979fd98b1517ad\",\r\n    \"rating\" : 5,\r\n    \"comment\" : \"Good job\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/rating",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "rating"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "e130fad9-bbbc-4120-a0c2-f65b49cdcca5",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"rideId\" : \"69b4f02c72979fd98b1517ad\",\r\n    \"rating\" : 5,\r\n    \"comment\" : \"Good job\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/rating",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "rating"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "69"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"45-j0PuCcwvii+v/xpJq9cOCXHkDqM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sat, 14 Mar 2026 06:49:15 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"The rating has been created successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-e130fad9-bbbc-4120-a0c2-f65b49cdcca5"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-eabf260d-57d2-4801-8216-1091fac7bfe7"
+        },
+        {
+          "name": "Rider Reviews",
+          "id": "4d7e93d9-60ae-4441-9eb8-e076e318e995",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/rating/rider/:riderId/reviews",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "rating",
+                "rider",
+                ":riderId",
+                "reviews"
+              ],
+              "variable": [
+                {
+                  "id": "b863c9a0-58d2-4561-96ea-243c0c2a8bde",
+                  "key": "riderId",
+                  "value": "69b12864ef93861f711e2882"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "70807930-76bc-4605-a718-53ef87e772b5",
+              "name": "success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/rating/rider/:riderId/reviews",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "rating",
+                    "rider",
+                    ":riderId",
+                    "reviews"
+                  ],
+                  "variable": [
+                    {
+                      "key": "riderId",
+                      "value": "69b12864ef93861f711e2882"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "467"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1d3-EHopFALbkLPunaM0O0Xi0SE+bZk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 24 Mar 2026 04:14:38 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"Rider reviews retrieved successfully\",\n    \"result\": {\n        \"rider\": {\n            \"id\": \"69b12864ef93861f711e2882\",\n            \"fullName\": \"Rider\",\n            \"profileImage\": null,\n            \"averageRating\": 3.5\n        },\n        \"reviews\": [\n            {\n                \"id\": \"69b504eb593b2cae2676e429\",\n                \"rating\": 3.5,\n                \"comment\": \"Good job\",\n                \"createdAt\": \"2026-03-14T06:49:15.367Z\",\n                \"user\": {\n                    \"id\": \"69b0f598fa3db60e702c2981\",\n                    \"fullName\": \"Ruhul Amin\",\n                    \"profileImage\": \"https://api.zenexcloud.com/emdadullah/uploads/profileImages/1773210079584-ticlc9ooas.jpg\"\n                }\n            }\n        ]\n    }\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-70807930-76bc-4605-a718-53ef87e772b5"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-4d7e93d9-60ae-4441-9eb8-e076e318e995"
+        }
+      ],
+      "id": "5f6648bc-9ed2-4bfd-bd2f-7ace1307ac39",
+      "createdAt": "2026-10-10T06:32:23.000Z",
+      "updatedAt": "2026-10-10T06:32:23.000Z",
+      "uid": "48491387-5f6648bc-9ed2-4bfd-bd2f-7ace1307ac39"
+    },
+    {
+      "name": "Label",
+      "item": [
+        {
+          "name": "Create Label | User",
+          "id": "ab9c573a-911a-4b82-9edd-de9480f44864",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"labelName\" : \"Home\",\r\n    \"destinationLat\" : 23.76,\r\n    \"destinationLong\" : 90.43,\r\n    \"destinationAddress\" : \"Banasree, Dhaka\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/label",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "label"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "397cf49b-9390-4e4a-b73f-5587f0449c4b",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"labelName\" : \"Home\",\r\n    \"destinationLat\" : 23.76,\r\n    \"destinationLong\" : 90.43,\r\n    \"destinationAddress\" : \"Banasree, Dhaka\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/label",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "label"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "68"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"44-LKKBhSRXT0D89wXsQIPA7IWHFI4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 15 Mar 2026 05:21:36 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"The label has been created successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-397cf49b-9390-4e4a-b73f-5587f0449c4b"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-ab9c573a-911a-4b82-9edd-de9480f44864"
+        },
+        {
+          "name": "My Labels | User",
+          "id": "82951d9b-de83-4460-b1f0-8a7a923144be",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/label/my-labels",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "label",
+                "my-labels"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "7e397077-a673-4081-933b-72f200a6ed26",
+              "name": "success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/label/my-labels",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "label",
+                    "my-labels"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "335"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"14f-i4/a2XitGxULYys2rjOa/S2vHBE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 15 Mar 2026 05:27:06 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"My labels have been retrieved successfully\",\n    \"result\": [\n        {\n            \"id\": \"69b641df9805113566e3d7c0\",\n            \"userId\": \"69b0f598fa3db60e702c2981\",\n            \"labelName\": \"Home\",\n            \"destinationLat\": 23.76,\n            \"destinationLong\": 90.43,\n            \"destinationAddress\": \"Banasree, Dhaka\",\n            \"createdAt\": \"2026-03-15T05:21:35.946Z\",\n            \"updatedAt\": \"2026-03-15T05:21:35.946Z\"\n        }\n    ]\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-7e397077-a673-4081-933b-72f200a6ed26"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-82951d9b-de83-4460-b1f0-8a7a923144be"
+        },
+        {
+          "name": "Delete Label | User",
+          "id": "536ac5eb-167f-4068-928c-242239534d39",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/label/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "label",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "id": "f39f3c75-43aa-44a2-b2c3-efcf0512e54a",
+                  "key": "id",
+                  "value": "69b641df9805113566e3d7c0"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "4a45397e-b434-4769-bd65-e5c4ba533791",
+              "name": "success",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/label/:id",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "label",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "69b641df9805113566e3d7c0"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "64"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"40-L0NM6esiWKccvj/TnRJOWCJph7I\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 15 Mar 2026 05:30:14 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"label has been deleted successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-4a45397e-b434-4769-bd65-e5c4ba533791"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-536ac5eb-167f-4068-928c-242239534d39"
+        }
+      ],
+      "id": "6468ec57-dd79-485d-a25e-4a4a4734f738",
+      "createdAt": "2026-10-10T06:32:23.000Z",
+      "updatedAt": "2026-10-10T06:32:23.000Z",
+      "uid": "48491387-6468ec57-dd79-485d-a25e-4a4a4734f738"
+    },
+    {
+      "name": "Category",
+      "item": [
+        {
+          "name": "Create Category | Admin",
+          "id": "ebbc4b25-bf24-4d40-9a40-edb700395595",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "bodyData",
+                  "value": "{\n    \"categoryName\" : \"Fruits\"\n}",
+                  "type": "text",
+                  "uuid": "e9e6c750-3b02-483a-b70d-c0319aadb453"
+                },
+                {
+                  "key": "thumbnail",
+                  "type": "file",
+                  "uuid": "4f92765f-e508-4b09-81a9-e57a8d805c1c",
+                  "src": "/C:/Users/USER/Downloads/Rectangle 34625367.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/category/create",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "category",
+                "create"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "4e1e9ff7-74f4-4ba5-999e-8d24c41fd9fa",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "bodyData",
+                      "value": "{\n    \"categoryName\" : \"Fruits\"\n}",
+                      "type": "text",
+                      "uuid": "e9e6c750-3b02-483a-b70d-c0319aadb453"
+                    },
+                    {
+                      "key": "thumbnail",
+                      "type": "file",
+                      "uuid": "4f92765f-e508-4b09-81a9-e57a8d805c1c",
+                      "src": [
+                        "/C:/Users/USER/Downloads/Rectangle 34625367.png"
+                      ]
+                    }
+                  ],
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/category/create",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "category",
+                    "create"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "71"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"47-9MsORmTJY0IKjIHjEcVLtKXlc/Y\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 24 Mar 2026 05:46:04 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"The category has been created successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-4e1e9ff7-74f4-4ba5-999e-8d24c41fd9fa"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-ebbc4b25-bf24-4d40-9a40-edb700395595"
+        },
+        {
+          "name": "Get Categories",
+          "id": "8917edb9-ea5e-423b-be21-2dccc53a0149",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/category/all-categories",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "category",
+                "all-categories"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "759db6da-935b-4a09-9130-38848f9e46f4",
+              "name": "success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/category/all-categories",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "category",
+                    "all-categories"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "329"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"149-+7j/maey/ejw0in23so8D0JdgBY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 24 Mar 2026 05:46:08 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"All categorys has been retrived successfully\",\n    \"result\": [\n        {\n            \"id\": \"69c2251b9432e3338fdcc483\",\n            \"categoryName\": \"Fruits\",\n            \"thumbnail\": \"https://api.zenexcloud.com/emdadullah/uploads/CategoryThumbnails/1774331162601-viktnvpcq4i.png\",\n            \"createdAt\": \"2026-03-24T05:46:03.923Z\",\n            \"updatedAt\": \"2026-03-24T05:46:03.923Z\"\n        }\n    ]\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-759db6da-935b-4a09-9130-38848f9e46f4"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-8917edb9-ea5e-423b-be21-2dccc53a0149"
+        },
+        {
+          "name": "Single Category",
+          "id": "497abc8a-5d0a-4d51-848d-19d1a1ce76fc",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/category/single-category/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "category",
+                "single-category",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "id": "45dde005-e5cc-4ca3-8fae-8bb0e3266d77",
+                  "key": "id",
+                  "value": "69c2251b9432e3338fdcc483"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "45f66ac0-d7bb-4e64-a2d8-700c381f87de",
+              "name": "success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/category/single-category/:id",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "category",
+                    "single-category",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "69c2251b9432e3338fdcc483"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "322"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"142-WcCeVjTaf+w/wZ9HKKKzBdqohCY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 24 Mar 2026 05:49:56 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"category has been retrived successfully\",\n    \"result\": {\n        \"id\": \"69c2251b9432e3338fdcc483\",\n        \"categoryName\": \"Fruits\",\n        \"thumbnail\": \"https://api.zenexcloud.com/emdadullah/uploads/CategoryThumbnails/1774331162601-viktnvpcq4i.png\",\n        \"createdAt\": \"2026-03-24T05:46:03.923Z\",\n        \"updatedAt\": \"2026-03-24T05:46:03.923Z\"\n    }\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-45f66ac0-d7bb-4e64-a2d8-700c381f87de"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-497abc8a-5d0a-4d51-848d-19d1a1ce76fc"
+        },
+        {
+          "name": "Update Category | Admin",
+          "id": "9246000a-3560-46cd-af8f-a5a3e83770ca",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "bodyData",
+                  "value": "{\n    \"categoryName\" : \"Fruits\"\n}",
+                  "type": "text",
+                  "uuid": "a9f62068-41f0-4e3d-bdfe-1d660136bb49"
+                },
+                {
+                  "key": "thumbnail",
+                  "type": "file",
+                  "uuid": "038f2b7e-7ff0-4288-a9cd-249eb9358129",
+                  "src": "/C:/Users/USER/Downloads/Rectangle 34625367.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/category/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "category",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "id": "9ab8451b-3cd3-4942-a30d-13e02518055c",
+                  "key": "id",
+                  "value": "69c2251b9432e3338fdcc483"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b44d72f2-4fef-491e-b1b8-d911e213ee23",
+              "name": "success",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "bodyData",
+                      "value": "{\n    \"categoryName\" : \"Fruits\"\n}",
+                      "type": "text",
+                      "uuid": "a9f62068-41f0-4e3d-bdfe-1d660136bb49"
+                    },
+                    {
+                      "key": "thumbnail",
+                      "type": "file",
+                      "uuid": "038f2b7e-7ff0-4288-a9cd-249eb9358129",
+                      "src": [
+                        "/C:/Users/USER/Downloads/Rectangle 34625367.png"
+                      ]
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseURL}}/category/:id",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "category",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "69c2251b9432e3338fdcc483"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "Text",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "67"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"43-cwOlmbU6BtKTE4cYdOyTlqKhruM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 24 Mar 2026 05:52:04 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"category has been updated successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-b44d72f2-4fef-491e-b1b8-d911e213ee23"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-9246000a-3560-46cd-af8f-a5a3e83770ca"
+        },
+        {
+          "name": "Delete Category | Admin",
+          "id": "e2810b80-4d16-4877-907d-03807a31da2d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/category/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "category",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "id": "e98fbc21-2fc2-4821-8972-7babacb47919",
+                  "key": "id",
+                  "value": "69c2251b9432e3338fdcc483"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "958b2339-166f-4dad-a51b-b6373938c408",
+              "name": "success",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/category/:id",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "category",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "69c2251b9432e3338fdcc483"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "67"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"43-LDHCRzGbXGqx6K5+tYK52643Cn4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 24 Mar 2026 05:52:46 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"category has been deleted successfully\"\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-958b2339-166f-4dad-a51b-b6373938c408"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-e2810b80-4d16-4877-907d-03807a31da2d"
+        }
+      ],
+      "id": "0d85f2dd-9143-430d-be86-11c6b79eac89",
+      "createdAt": "2026-10-10T06:32:23.000Z",
+      "updatedAt": "2026-10-10T06:32:23.000Z",
+      "uid": "48491387-0d85f2dd-9143-430d-be86-11c6b79eac89"
+    },
+    {
+      "name": "Withdrawal",
+      "item": [
+        {
+          "name": "Withdrawal with card | Rider",
+          "id": "486f267b-e2b2-4516-885f-92430a098890",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{riderToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"amount\" : 100,\r\n    \"method\" : \"BankTransfer\" //BePay, PayPal, BankTransfer\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/withdrawal/card",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "withdrawal",
+                "card"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "aa1dcd83-9ecc-4d75-b7ef-5f78938d7cd1",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"amount\" : 100,\r\n    \"method\" : \"BankTransfer\" //BePay, PayPal, BankTransfer\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/withdrawal/create",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "withdrawal",
+                    "create"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "105"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"69-+MN1XetrurnAJPUm8Wfv2KOIYQc\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 30 Mar 2026 03:32:37 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"The withdrawal has been created successfully\",\n    \"result\": {\n        \"totalWithdrawn\": 100\n    }\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-aa1dcd83-9ecc-4d75-b7ef-5f78938d7cd1"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-486f267b-e2b2-4516-885f-92430a098890"
+        },
+        {
+          "name": "Withdrwal with paypal | Rider",
+          "id": "64d34f06-b8b4-4c2e-a929-9236bf911365",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{riderToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"amount\" : 100,\r\n    \"method\" : \"PayPal\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/withdrawal/paypal",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "withdrawal",
+                "paypal"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "de150abd-48f3-4e17-931f-27a238e1cb57",
+              "name": "success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"amount\" : 100,\r\n    \"method\" : \"PayPal\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/withdrawal/paypal",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "withdrawal",
+                    "paypal"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "105"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"69-+MN1XetrurnAJPUm8Wfv2KOIYQc\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 31 Mar 2026 04:31:38 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"The withdrawal has been created successfully\",\n    \"result\": {\n        \"totalWithdrawn\": 100\n    }\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-de150abd-48f3-4e17-931f-27a238e1cb57"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-64d34f06-b8b4-4c2e-a929-9236bf911365"
+        },
+        {
+          "name": "My Wallet History | Rider",
+          "id": "1c680129-010c-4eb5-a158-a1ca0d2aece8",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{riderToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/ride-sharing/my/wallet-history",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "ride-sharing",
+                "my",
+                "wallet-history"
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "e0f83e3b-15c5-4936-a481-a65eb8701e1d",
+              "name": "success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/ride-sharing/my/wallet-history",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "ride-sharing",
+                    "my",
+                    "wallet-history"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "452"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1c4-sdDEHwQXHIWp6OciGzgbFcJxv1g\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 30 Mar 2026 03:29:37 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"success\": true,\n    \"message\": \"My wallet history has been retrieved successfully\",\n    \"result\": {\n        \"rideCount\": 1,\n        \"walletBalance\": 900,\n        \"lastOneMonthEarnings\": 0,\n        \"lastWeekEarnings\": [\n            {\n                \"day\": \"Mon\",\n                \"amount\": 0\n            },\n            {\n                \"day\": \"Tue\",\n                \"amount\": 0\n            },\n            {\n                \"day\": \"Wed\",\n                \"amount\": 0\n            },\n            {\n                \"day\": \"Thu\",\n                \"amount\": 0\n            },\n            {\n                \"day\": \"Fri\",\n                \"amount\": 0\n            },\n            {\n                \"day\": \"Sat\",\n                \"amount\": 0\n            },\n            {\n                \"day\": \"Sun\",\n                \"amount\": 0\n            }\n        ],\n        \"withdrawalHistory\": [\n            {\n                \"id\": \"69c9edb09b99b53234c54a2c\",\n                \"amount\": 100,\n                \"createdAt\": \"2026-03-30T03:27:44.575Z\"\n            }\n        ]\n    }\n}",
+              "createdAt": "2026-10-10T06:32:23.000Z",
+              "updatedAt": "2026-10-10T06:32:23.000Z",
+              "uid": "48491387-e0f83e3b-15c5-4936-a481-a65eb8701e1d"
+            }
+          ],
+          "createdAt": "2026-10-10T06:32:23.000Z",
+          "updatedAt": "2026-10-10T06:32:23.000Z",
+          "uid": "48491387-1c680129-010c-4eb5-a158-a1ca0d2aece8"
+        }
+      ],
+      "id": "2b75e272-b846-4078-84bd-795dbf67522d",
+      "createdAt": "2026-10-10T06:32:23.000Z",
+      "updatedAt": "2026-10-10T06:32:23.000Z",
+      "uid": "48491387-2b75e272-b846-4078-84bd-795dbf67522d"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ],
+        "id": "9e848364-238c-44f9-a3b9-7bc917220c0b"
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ],
+        "id": "85c4000e-a7a0-4613-a6ac-ae8e5a692d3a"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": ""
+    },
+    {
+      "key": "userToken",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "riderToken",
+      "value": ""
+    },
+    {
+      "key": "foodDeliverToken",
+      "value": ""
+    },
+    {
+      "key": "forgetToken",
+      "value": ""
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "baseURL",
+      "value": "",
+      "disabled": true
+    }
+  ]
+}
